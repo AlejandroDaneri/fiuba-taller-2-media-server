@@ -1,0 +1,22 @@
+{
+  "name": "fiuba-taller-2-media-server",
+  "version": "1.0.0",
+  "description": "media server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlejandroDaneri/fiuba-taller-2-media-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlejandroDaneri/fiuba-taller-2-media-server/issues"
+  },
+  "homepage": "https://github.com/AlejandroDaneri/fiuba-taller-2-media-server#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
