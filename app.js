@@ -68,13 +68,25 @@ function downloadFile() {
 //downloadFile();
 
 //------------PG---------------
-async function postgres() {
+function postgres() {
     const { Client } = require('pg')
-    const client = new Client()
-    await client.connect()
-    const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-    console.log(res.rows[0].message) // Hello world!
-    await client.end()
+    const client = new Client({
+        user: 'user',
+        connectionString: 'postgres://user:pass@postgres:5432/db',
+        database: 'db',
+        password: 'pass',
+        port: 5432
+    })
+    client
+        .connect()
+        .then(() => console.log('connected'))
+        .catch(err => console.error('connection error', err.stack))
+    // await client.connect()
+    // const res = await client.query('SELECT $1::text as message', ['Hello world!'])
+    // console.log(res.rows[0].message) // Hello world!
+    // await client.end()
 }
+app.get('/pg', function (req, res) {
+    postgres()
+});
 
-//postgres().catch(err=>console.log(err))
