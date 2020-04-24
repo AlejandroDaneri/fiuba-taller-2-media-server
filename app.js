@@ -77,4 +77,4 @@ async function postgres() {
     await client.end()
 }
 
-postgres().catch(err=>console.log(err))
+//postgres().catch(err=>console.log(err))

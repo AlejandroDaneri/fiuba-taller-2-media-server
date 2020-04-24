@@ -25,7 +25,7 @@ deploy:
   provider: script
   script:
     # push to dockerhub & heroku
-    docker push unqpdes/todo-list-front;
+    docker push alejandrodaneri/media-node-chotuve;
     docker push registry.heroku.com/$HEROKU_APP_NAME/web;
     heroku container:release web --app $HEROKU_APP_NAME
   on:
