@@ -38,6 +38,7 @@ const firebaseConfig = {
     measurementId: "G-QSJF5QG7WS"
 };
 
+//-------------FIREBASE------------
 var admin = require('firebase-admin');
 var fapp = admin.initializeApp(firebaseConfig);
 
@@ -64,4 +65,16 @@ function downloadFile() {
     );
 }
 
-downloadFile();
+//downloadFile();
+
+//------------PG---------------
+async function postgres() {
+    const { Client } = require('pg')
+    const client = new Client()
+    await client.connect()
+    const res = await client.query('SELECT $1::text as message', ['Hello world!'])
+    console.log(res.rows[0].message) // Hello world!
+    await client.end()
+}
+
+postgres().catch(err=>console.log(err))
