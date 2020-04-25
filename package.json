@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"no test specified\"",
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon --exec babel-node app.js"
   },
   "repository": {
     "type": "git",
@@ -18,9 +19,15 @@
   },
   "homepage": "https://github.com/AlejandroDaneri/fiuba-taller-2-media-server#readme",
   "dependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.5",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "firebase": "^7.14.2",
+    "nodemon": "^2.0.3",
     "pg": "^8.0.3",
     "request": "^2.88.2"
   },
