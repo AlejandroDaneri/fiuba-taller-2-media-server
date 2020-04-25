@@ -1,5 +1,32 @@
+sudo: required
 language: node_js
+
+services:
+  - docker
+
+before_install:
+  # install heroku CLI
+  - wget -qO- https://toolbelt.heroku.com/install.sh | sh
+  # login to docker registries (dockerhub + heroku)
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
+
+install:
+  - npm install
+
+script:
+  - npm test
+  - npm build
+  # build docker images
+  - docker build -t alejandrodaneri/media-node-chotuve .
+  - docker tag alejandrodaneri/media-node-chotuve  registry.heroku.com/$HEROKU_APP_NAME/web
+
 deploy:
-  provider: heroku
-  api_key:
-    secure: awU546aYac4x4/a+DyEl2UFDHnqdqBGOgpFC2Y6pB+9ZzFRVYKppQVDaXE8hZARJDHZ0LGfQIUpQd32xCiOrNV14ZLjdwbWziWPrcuawcPWzrUGzLii7XhZ4yctb18zoUaEDBXqSKZN1iLyaDcE8ZDryNbJ4fqV/gC86yjA2huhtioIIz4ZMYbmKe+a6DYMAltouKXhA4HSH12dXp8TnrD79h27hawjjwRV7tzwswl0guf2PD39KbjFWGjFH4NiWrrVyeTplktcuvVY9bS/pOz/VpphFT2zctR+Groj/UxXqIK64uDRsj6AAjcfMRno7+cKqfKcJsLHOyH9uvSCZwcytrrXdR15G9LhJfH4/qxkpxqkx3FIGjpf+pVyj6/HDgCnLXynUjWjKKLwvv024+zBMoOeQvAo98hVTBMEt/lPX8a9mpyJxpNW3qUeq6SrfwveiFTFpq5cPa+W1uHm0oNJrz3a3R9cfoDGThmu2LwmQ08bbei0st+3a/F8JztJhux4JWGIFv5WbzTN4a3SJuwJPHM+HtaRngx2+L7sWxvBlbUG2Kak6uN999lG9Hl+EH/T09/y7odoW05XzO7LplClSoKfhFBRLSMwivHlFVfFzQNL08gOcjt/8sKfmCImOMgebuR2gjkQq6xNTYiYzeYt8W6uAjTXATSl8/hWAlo4=
+  provider: script
+  script:
+    # push to dockerhub & heroku
+    docker push alejandrodaneri/media-node-chotuve;
+    docker push registry.heroku.com/$HEROKU_APP_NAME/web;
+    heroku container:release web --app $HEROKU_APP_NAME
+  on:
+    branch: master

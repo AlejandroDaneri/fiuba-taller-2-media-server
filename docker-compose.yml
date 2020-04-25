@@ -1,0 +1,22 @@
+version: "3"
+services:
+  app:
+    container_name: node-app
+    build: .
+    depends_on:
+      - postgres
+    env_file: .env
+    ports:
+      - "3000:3000"
+    volumes:
+    - .:/src/app
+
+  postgres:
+    container_name: postgres
+    image: postgres:12.2
+    ports:
+      - "35432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db

@@ -25,3 +25,65 @@ app.get('/auth', function (req, res) {
         }
     })
 });
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyD2R77K2nWb_iJbCIzgTCsFZ36kxDF_zr0",
+    authDomain: "chotuve-grupo8.firebaseapp.com",
+    databaseURL: "https://chotuve-grupo8.firebaseio.com",
+    projectId: "chotuve-grupo8",
+    storageBucket: "chotuve-grupo8.appspot.com",
+    messagingSenderId: "968905452769",
+    appId: "1:968905452769:web:469139c9bccac35d301ba0",
+    measurementId: "G-QSJF5QG7WS"
+};
+
+//-------------FIREBASE------------
+var admin = require('firebase-admin');
+var fapp = admin.initializeApp(firebaseConfig);
+
+var storage = fapp.storage();
+
+const bucketName = 'chotuve-grupo8.appspot.com';
+const srcFilename = 'prueba.png';
+const destFilename = '/home/ale/Documentos/fiuba2.png';
+
+function downloadFile() {
+    const options = {
+        // The path to which the file should be downloaded, e.g. "./file.txt"
+        destination: destFilename,
+    };
+
+    // Downloads the file
+    storage
+        .bucket(bucketName)
+        .file(srcFilename)
+        .download(options);
+
+    console.log(
+        `gs://${bucketName}/${srcFilename} downloaded to ${destFilename}.`
+    );
+}
+
+//downloadFile();
+
+//------------PG---------------
+function postgres() {
+    const { Client } = require('pg')
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        //ssl: true,
+    })
+    client
+        .connect()
+        .then(() => console.log('connected'))
+        .catch(err => console.error('connection error', err.stack))
+    // await client.connect()
+    // const res = await client.query('SELECT $1::text as message', ['Hello world!'])
+    // console.log(res.rows[0].message) // Hello world!
+    // await client.end()
+}
+app.get('/pg', function (req, res) {
+    postgres()
+});
+
