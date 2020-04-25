@@ -3,11 +3,11 @@ var admin = require('firebase-admin');
 
 const bucketName = 'chotuve-grupo8.appspot.com';
 const srcFilename = 'prueba.png';
-const destFilename = '/home/ale/Documentos/fiuba2.png';
+const destFilename = './fiuba2.png';
 
 class Firebase {
     constructor() {
-        const firebaseConfig = {
+        this.firebaseConfig = {
             apiKey: "AIzaSyD2R77K2nWb_iJbCIzgTCsFZ36kxDF_zr0",
             authDomain: "chotuve-grupo8.firebaseapp.com",
             databaseURL: "https://chotuve-grupo8.firebaseio.com",
@@ -17,8 +17,8 @@ class Firebase {
             appId: "1:968905452769:web:469139c9bccac35d301ba0",
             measurementId: "G-QSJF5QG7WS"
         };
-        var fapp = admin.initializeApp(firebaseConfig);
-        this.storage = fapp.storage();
+        this.fapp = admin.initializeApp(this.firebaseConfig);
+        this.storage = this.fapp.storage();
     }
 
     downloadFile() {
