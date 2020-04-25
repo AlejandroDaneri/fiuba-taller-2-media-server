@@ -71,11 +71,8 @@ function downloadFile() {
 function postgres() {
     const { Client } = require('pg')
     const client = new Client({
-        user: 'user',
-        connectionString: 'postgres://user:pass@postgres:5432/db',
-        database: 'db',
-        password: 'pass',
-        port: 5432
+        connectionString: process.env.DATABASE_URL,
+        //ssl: true,
     })
     client
         .connect()
