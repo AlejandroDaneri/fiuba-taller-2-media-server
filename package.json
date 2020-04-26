@@ -25,6 +25,8 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
-    "firebase-admin": "^8.11.0"
+    "firebase-admin": "^8.11.0",
+    "prettier": "^2.0.5",
+    "prettier-standard": "^16.3.0"
   }
 }
