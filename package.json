@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"no test specified\"",
-    "start": "node app.js"
+    "start": "node app.js",
+    "lint": "prettier-standard --lint"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,17 @@
   },
   "devDependencies": {
     "firebase-admin": "^8.11.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.1.7",
     "prettier": "^2.0.5",
     "prettier-standard": "^16.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,md}": "npm run lint"
   }
 }
