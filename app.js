@@ -2,8 +2,11 @@ require('dotenv').config()
 var express = require('express');
 var app = express();
 var Firebase = require("./firebase")
-var firebase = new Firebase()
-firebase.downloadFile()
+
+app.get('/fire', function (req, res) {
+    var firebase = new Firebase()
+    firebase.downloadFile()
+});
 
 app.get('/', function (req, res) {
     res.send('Hello World!');
