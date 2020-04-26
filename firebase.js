@@ -1,6 +1,5 @@
 var admin = require('firebase-admin');
 
-
 const bucketName = 'chotuve-grupo8.appspot.com';
 const srcFilename = 'prueba.png';
 const destFilename = './fiuba2.png';
@@ -23,11 +22,9 @@ class Firebase {
 
     downloadFile() {
         const options = {
-            // The path to which the file should be downloaded, e.g. "./file.txt"
             destination: destFilename,
         };
-    
-        // Downloads the file
+
         this.storage
             .bucket(bucketName)
             .file(srcFilename)
@@ -38,7 +35,6 @@ class Firebase {
             .catch(_ => {
                 console.info("Download dont works")
             })
-    
     }
 }
 
