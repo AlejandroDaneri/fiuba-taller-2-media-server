@@ -24,9 +24,9 @@ script:
 deploy:
   - provider: script
     script:
-      docker tag alejandrodaneri/media-node-chotuve:production  registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
       # push to dockerhub & heroku
-      docker push alejandrodaneri/media-node-chotuve:production;
+      docker tag alejandrodaneri/media-node-chotuve:production  registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
+      docker push alejandrodaneri/media-node-chotuve;
       docker push registry.heroku.com/$HEROKU_APP_NAME_STAGING/web;
       heroku container:release web --app $HEROKU_APP_NAME_STAGING
     on:
@@ -34,9 +34,9 @@ deploy:
 
   - provider: script
     script:
-      docker tag alejandrodaneri/media-node-chotuve:staging  registry.heroku.com/$HEROKU_APP_NAME/web
       # push to dockerhub & heroku
-      docker push alejandrodaneri/media-node-chotuve:staging;
+      docker tag alejandrodaneri/media-node-chotuve:staging  registry.heroku.com/$HEROKU_APP_NAME/web
+      docker push alejandrodaneri/media-node-chotuve;
       docker push registry.heroku.com/$HEROKU_APP_NAME/web;
       heroku container:release web --app $HEROKU_APP_NAME
     on:
