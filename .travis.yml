@@ -19,14 +19,25 @@ script:
   - npm build
   # build docker images
   - docker build -t alejandrodaneri/media-node-chotuve .
-  - docker tag alejandrodaneri/media-node-chotuve  registry.heroku.com/$HEROKU_APP_NAME/web
+#  - docker tag alejandrodaneri/media-node-chotuve  registry.heroku.com/$HEROKU_APP_NAME/web
 
 deploy:
-  provider: script
-  script:
-    # push to dockerhub & heroku
-    docker push alejandrodaneri/media-node-chotuve;
-    docker push registry.heroku.com/$HEROKU_APP_NAME/web;
-    heroku container:release web --app $HEROKU_APP_NAME
-  on:
-    branch: master
+  - provider: script
+    script:
+      docker tag alejandrodaneri/media-node-chotuve:production  registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
+      # push to dockerhub & heroku
+      docker push alejandrodaneri/media-node-chotuve:production;
+      docker push registry.heroku.com/$HEROKU_APP_NAME_STAGING/web;
+      heroku container:release web --app $HEROKU_APP_NAME_STAGING
+    on:
+      branch: develop
+
+  - provider: script
+    script:
+      docker tag alejandrodaneri/media-node-chotuve:staging  registry.heroku.com/$HEROKU_APP_NAME/web
+      # push to dockerhub & heroku
+      docker push alejandrodaneri/media-node-chotuve:staging;
+      docker push registry.heroku.com/$HEROKU_APP_NAME/web;
+      heroku container:release web --app $HEROKU_APP_NAME
+    on:
+      branch: master
