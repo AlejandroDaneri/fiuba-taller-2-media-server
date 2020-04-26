@@ -21,6 +21,7 @@ class Firebase {
   }
 
   downloadFile () {
+    // download
     const options = {
       destination: destFilename
     }
