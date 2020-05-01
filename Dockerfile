@@ -6,8 +6,6 @@ WORKDIR /src/app
 
 COPY package.json /src/app/package.json
 
-COPY chotuve-grupo8-afb7494394a6.json /src/app/chotuve-grupo8-afb7494394a6.json
-
 RUN npm install
 
 COPY . /src/app
