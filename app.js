@@ -5,7 +5,11 @@ var Firebase = require('./firebase')
 var firebase = new Firebase()
 
 app.get('/list', async function (req, res) {
-  res.json(await firebase.listFiles().catch(console.error));
+  try {
+    res.json(await firebase.listFiles().catch(console.error));
+  }catch (error) {
+    console.error("Could not get files list: ${error}");
+  }
 })
 
 app.get('/', function (req, res) {
@@ -26,7 +30,7 @@ app.get('/auth', function (req, res) {
   var request = require('request')
   request(process.env.AUTH_BASE_URL, function (error, response, body) {
     if (!error && response.statusCode === process.env.OK_CODE) {
-      console.log('Successfully pinged Auth Server') // Print the google web page.
+      console.log('Successfully pinged Auth Server')
       res.send(body)
     }
   })
