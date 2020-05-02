@@ -20,28 +20,20 @@ class Firebase {
 
   async listFiles() {
     // Lists files in the bucket
+    console.log("Getting metadata of firebase files")
     const [files] = await this.storage.bucket(bucketName).getFiles();
-
-    console.log('Files:');
+    let response = {};
     for (const file of files) {
-      console.log("-----------------")
-      console.log("-----------------")
-      console.log(file.name);
+      let temp={};
       const [metadata] = await this.storage
           .bucket(bucketName)
           .file(file.name)
           .getMetadata();
 
-    console.log(`File: ${metadata.name}`);
-    console.log(`Bucket: ${metadata.bucket}`);
-    console.log(`Storage class: ${metadata.storageClass}`);
-    console.log(`Self link: ${metadata.selfLink}`);
-    console.log(`ID: ${metadata.id}`);
-    console.log(`Size: ${metadata.size}`);
-    console.log(`Updated: ${metadata.updated}`);
-    console.log(`Generation: ${metadata.generation}`);
-    console.log(`Metageneration: ${metadata.metageneration}`);
-    console.log(`Etag: ${metadata.etag}`);
+      for(const [key, value] of Object.entries(metadata)){
+        temp[key] =value;
+      }
+
       const config = {
         action: 'read',
         expires:  Date.now() + 1000 * 60 * 60,
@@ -52,28 +44,11 @@ class Firebase {
           .file(file.name)
           .getSignedUrl(config);
 
-      console.log(`The url for see ${file.name} is ${url}.`);
+      temp["URL"] =url
 
+      response[file.name]=temp;
     }
-  }
-
-  downloadFile () {
-    const srcFilename = 'prueba.png'
-    const destFilename = './fiuba2.png'
-
-    const options = {
-      destination: destFilename
-    }
-    this.storage
-      .bucket(bucketName)
-      .file(srcFilename)
-      .download(options)
-      .then(_ => {
-        console.info('Download works')
-      })
-      .catch(_ => {
-        console.info('Download dont works')
-      })
+    return response;
   }
 }
 

@@ -4,8 +4,8 @@ var app = express()
 var Firebase = require('./firebase')
 var firebase = new Firebase()
 
-app.get('/fire', function (req, res) {
-  firebase.listFiles().catch(console.error);
+app.get('/list', async function (req, res) {
+  res.json(await firebase.listFiles().catch(console.error));
 })
 
 app.get('/', function (req, res) {
@@ -33,21 +33,20 @@ app.get('/auth', function (req, res) {
 })
 
 // ------------PG---------------
-function postgres () {
-  const { Client } = require('pg')
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL
-    // ssl: true,
-  })
-  client
-    .connect()
-    .then(() => console.log('connected'))
-    .catch(err => console.error('connection error', err.stack))
-  // await client.connect()
-  // const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-  // console.log(res.rows[0].message) // Hello world!
-  // await client.end()
-}
-app.get('/pg', function (req, res) {
-  postgres()
-})
+// function postgres () {
+//   const { Client } = require('pg')
+//   const client = new Client({
+//     connectionString: process.env.DATABASE_URL
+//   })
+//   client
+//     .connect()
+//     .then(() => console.log('connected'))
+//     .catch(err => console.error('connection error', err.stack))
+//   // await client.connect()
+//   // const res = await client.query('SELECT $1::text as message', ['Hello world!'])
+//   // console.log(res.rows[0].message) // Hello world!
+//   // await client.end()
+// }
+// app.get('/pg', function (req, res) {
+//   postgres()
+// })
