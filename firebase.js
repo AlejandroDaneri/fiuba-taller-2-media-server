@@ -20,32 +20,24 @@ class Firebase {
 
   async listFiles() {
     // Lists files in the bucket
-    console.log("Getting metadata of firebase files")
+    console.info("Getting metadata of firebase files")
     const [files] = await this.storage.bucket(bucketName).getFiles();
     let response = {};
     for (const file of files) {
       let temp={};
-      const [metadata] = await this.storage
-          .bucket(bucketName)
-          .file(file.name)
-          .getMetadata();
-
-      for(const [key, value] of Object.entries(metadata)){
-        temp[key] =value;
-      }
-
-      const config = {
+      const metadataPromise = file.getMetadata();
+      const urlPromise = file.getSignedUrl({
         action: 'read',
         expires:  Date.now() + 1000 * 60 * 60,
-      };
+      });
 
-      const [url] = await this.storage
-          .bucket(bucketName)
-          .file(file.name)
-          .getSignedUrl(config);
+      const [metadata,url] = await Promise.all([metadataPromise,urlPromise]);
 
-      temp["URL"] =url
 
+      for(const [key, value] of Object.entries(metadata[0])){
+        temp[key] =value;
+      }
+      temp["URL"] =url[0];
       response[file.name]=temp;
     }
     return response;

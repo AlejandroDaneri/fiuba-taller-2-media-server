@@ -4,12 +4,11 @@ var app = express()
 var Firebase = require('./firebase')
 var firebase = new Firebase()
 
-app.get('/list', async function (req, res) {
-  try {
-    res.json(await firebase.listFiles().catch(console.error));
-  }catch (error) {
-    console.error("Could not get files list: ${error}");
-  }
+app.get('/list', function (req, res) {
+  firebase.listFiles()
+      .then(result =>{res.json(result);
+                      console.info("Metadata request completed")})
+      .catch(e => console.error(`Could not get files metadata: ${e}`));
 })
 
 app.get('/', function (req, res) {
@@ -17,12 +16,12 @@ app.get('/', function (req, res) {
 })
 
 app.listen(process.env.PORT, function () {
-  console.log('Example app listening on port', process.env.PORT)
+  console.info('Example app listening on port', process.env.PORT)
 })
 
 app.get('/ping', function (req, res) {
   res.send('Ping received!')
-  console.log('New ping from:', req.ip)
+  console.info('New ping from:', req.ip)
 })
 
 // TESTING OTHER SERVERS ENDPOINTS
@@ -30,7 +29,7 @@ app.get('/auth', function (req, res) {
   var request = require('request')
   request(process.env.AUTH_BASE_URL, function (error, response, body) {
     if (!error && response.statusCode === process.env.OK_CODE) {
-      console.log('Successfully pinged Auth Server')
+      console.info('Successfully pinged Auth Server')
       res.send(body)
     }
   })
