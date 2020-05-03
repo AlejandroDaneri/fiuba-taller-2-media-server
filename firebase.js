@@ -1,8 +1,6 @@
 var admin = require('firebase-admin')
 
 const bucketName = 'chotuve-grupo8.appspot.com'
-const srcFilename = 'prueba.png'
-const destFilename = './fiuba2.png'
 
 class Firebase {
   constructor () {
@@ -20,21 +18,29 @@ class Firebase {
     this.storage = this.fapp.storage()
   }
 
-  downloadFile () {
-    const options = {
-      destination: destFilename
-    }
+  async listVideoFiles() {
+    // Lists files in the bucket
+    console.info("Getting metadata of firebase files")
+    const [files] = await this.storage.bucket(bucketName).getFiles();
+    let response = {videos:[]};
+    for (const file of files) {
+      const metadataPromise = file.getMetadata();
+      const urlPromise = file.getSignedUrl({
+        action: 'read',
+        expires:  Date.now() + 1000 * 60 * 60,
+      });
+      const [metadata,url] = await Promise.all([metadataPromise,urlPromise]);
 
-    this.storage
-      .bucket(bucketName)
-      .file(srcFilename)
-      .download(options)
-      .then(_ => {
-        console.info('Download works')
-      })
-      .catch(_ => {
-        console.info('Download dont works')
-      })
+      if(metadata[0].contentType === "video/mp4"){
+        response.videos.push({id:metadata[0].id,
+          name: metadata[0].name,
+          dateCreated: metadata[0].timeCreated,
+          size:metadata[0].size,
+          type:metadata[0].contentType,
+          url: url[0]})
+      }
+    }
+    return response;
   }
 }
 
