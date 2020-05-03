@@ -18,27 +18,27 @@ class Firebase {
     this.storage = this.fapp.storage()
   }
 
-  async listFiles() {
+  async listVideoFiles() {
     // Lists files in the bucket
     console.info("Getting metadata of firebase files")
     const [files] = await this.storage.bucket(bucketName).getFiles();
-    let response = {};
+    let response = {videos:[]};
     for (const file of files) {
-      let temp={};
       const metadataPromise = file.getMetadata();
       const urlPromise = file.getSignedUrl({
         action: 'read',
         expires:  Date.now() + 1000 * 60 * 60,
       });
-
       const [metadata,url] = await Promise.all([metadataPromise,urlPromise]);
 
-
-      for(const [key, value] of Object.entries(metadata[0])){
-        temp[key] =value;
+      if(metadata[0].contentType === "video/mp4"){
+        response.videos.push({id:metadata[0].id,
+          name: metadata[0].name,
+          dateCreated: metadata[0].timeCreated,
+          size:metadata[0].size,
+          type:metadata[0].contentType,
+          url: url[0]})
       }
-      temp["URL"] =url[0];
-      response[file.name]=temp;
     }
     return response;
   }

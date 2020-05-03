@@ -5,7 +5,7 @@ var Firebase = require('./firebase')
 var firebase = new Firebase()
 
 app.get('/list', function (req, res) {
-  firebase.listFiles()
+  firebase.listVideoFiles()
       .then(result =>{res.json(result);
                       console.info("Metadata request completed")})
       .catch(e => console.error(`Could not get files metadata: ${e}`));
