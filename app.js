@@ -30,7 +30,7 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
-app.listen(process.env.PORT, function () {
+const server = app.listen(process.env.PORT, function () {
   console.info('Example app listening on port', process.env.PORT)
 })
 
@@ -49,3 +49,5 @@ app.get('/auth', function (req, res) {
     }
   })
 })
+
+module.exports = server
