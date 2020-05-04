@@ -4,17 +4,26 @@ var app = express()
 var Firebase = require('./firebase')
 var firebase = new Firebase()
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://fiuba-taller-2-web-admin.herokuapp.com");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+app.use(function (req, res, next) {
+  res.header(
+    'Access-Control-Allow-Origin',
+    'https://fiuba-taller-2-web-admin.herokuapp.com'
+  )
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+  next()
+})
 
 app.get('/list', function (req, res) {
-  firebase.listVideoFiles()
-      .then(result =>{res.json(result);
-                      console.info("Metadata request completed")})
-      .catch(e => console.error(`Could not get files metadata: ${e}`));
+  firebase
+    .listVideoFiles()
+    .then(result => {
+      res.json(result)
+      console.info('Metadata request completed')
+    })
+    .catch(e => console.error(`Could not get files metadata: ${e}`))
 })
 
 app.get('/', function (req, res) {
@@ -40,22 +49,3 @@ app.get('/auth', function (req, res) {
     }
   })
 })
-
-// ------------PG---------------
-// function postgres () {
-//   const { Client } = require('pg')
-//   const client = new Client({
-//     connectionString: process.env.DATABASE_URL
-//   })
-//   client
-//     .connect()
-//     .then(() => console.log('connected'))
-//     .catch(err => console.error('connection error', err.stack))
-//   // await client.connect()
-//   // const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-//   // console.log(res.rows[0].message) // Hello world!
-//   // await client.end()
-// }
-// app.get('/pg', function (req, res) {
-//   postgres()
-// })
