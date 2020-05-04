@@ -5,7 +5,6 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watch",
     "start": "node app.js",
     "lint": "prettier-standard --lint --staged"
   },

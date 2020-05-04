@@ -1,11 +1,12 @@
 sudo: required
 language: node_js
+node_js:
+  - 13
 
 services:
   - docker
 
 before_install:
-  - npm install -g node-gyp
   # install heroku CLI
   - wget -qO- https://toolbelt.heroku.com/install.sh | sh
   # login to docker registries (dockerhub + heroku)
