@@ -39,15 +39,15 @@ app.get('/ping', function (req, res) {
   console.info('New ping from:', req.ip)
 })
 
-// TESTING OTHER SERVERS ENDPOINTS
-app.get('/auth', function (req, res) {
-  var request = require('request')
-  request(process.env.AUTH_BASE_URL, function (error, response, body) {
-    if (!error && response.statusCode === process.env.OK_CODE) {
-      console.info('Successfully pinged Auth Server')
-      res.send(body)
-    }
-  })
-})
+// // TESTING OTHER SERVERS ENDPOINTS
+// app.get('/auth', function (req, res) {
+//   var request = require('request')
+//   request(process.env.AUTH_BASE_URL, function (error, response, body) {
+//     if (!error && response.statusCode === process.env.OK_CODE) {
+//       console.info('Successfully pinged Auth Server')
+//       res.send(body)
+//     }
+//   })
+// })
 
 module.exports = server
