@@ -18,29 +18,31 @@ class Firebase {
     this.storage = this.fapp.storage()
   }
 
-  async listVideoFiles() {
+  async listVideoFiles () {
     // Lists files in the bucket
-    console.info("Getting metadata of firebase files")
-    const [files] = await this.storage.bucket(bucketName).getFiles();
-    let response = {videos:[]};
+    console.info('Getting metadata of firebase files')
+    const [files] = await this.storage.bucket(bucketName).getFiles()
+    var response = { videos: [] }
     for (const file of files) {
-      const metadataPromise = file.getMetadata();
+      const metadataPromise = file.getMetadata()
       const urlPromise = file.getSignedUrl({
         action: 'read',
-        expires:  Date.now() + 1000 * 60 * 60,
-      });
-      const [metadata,url] = await Promise.all([metadataPromise,urlPromise]);
+        expires: Date.now() + 1000 * 60 * 60
+      })
+      const [metadata, url] = await Promise.all([metadataPromise, urlPromise])
 
-      if(metadata[0].contentType === "video/mp4"){
-        response.videos.push({id:metadata[0].id,
+      if (metadata[0].contentType === 'video/mp4') {
+        response.videos.push({
+          id: metadata[0].id,
           name: metadata[0].name,
           dateCreated: metadata[0].timeCreated,
-          size:metadata[0].size,
-          type:metadata[0].contentType,
-          url: url[0]})
+          size: metadata[0].size,
+          type: metadata[0].contentType,
+          url: url[0]
+        })
       }
     }
-    return response;
+    return response
   }
 }
 

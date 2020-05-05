@@ -4,9 +4,9 @@
   "description": "media server",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"no test specified\"",
+    "test": "jest --coverage && coveralls < coverage/lcov.info",
     "start": "node app.js",
-    "lint": "prettier-standard --lint"
+    "lint": "prettier-standard --lint --staged"
   },
   "repository": {
     "type": "git",
@@ -27,15 +27,22 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "babel-jest": "^25.5.1",
+    "coveralls": "^3.1.0",
     "firebase-admin": "^8.11.0",
+    "firebase-mock": "^2.3.2",
     "husky": "^4.2.5",
+    "jest": "^25.5.4",
     "lint-staged": "^10.1.7",
     "prettier": "^2.0.5",
-    "prettier-standard": "^16.3.0"
+    "prettier-standard": "^16.3.0",
+    "supertest": "^4.0.2"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "npm run lint"
     }
   },
   "lint-staged": {
