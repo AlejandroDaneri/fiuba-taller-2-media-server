@@ -3,6 +3,5 @@
 
 #misc
 .idea
-
-chotuve-grupo8-*
-
+/coverage
+.DS_Store

@@ -1,5 +1,7 @@
 sudo: required
 language: node_js
+node_js:
+  - 13
 
 services:
   - docker
@@ -17,9 +19,6 @@ install:
 script:
   - npm test
   - npm build
-  # build docker images
- # - docker build -t alejandrodaneri/media-node-chotuve:staging .
-#  - docker tag alejandrodaneri/media-node-chotuve  registry.heroku.com/$HEROKU_APP_NAME/web
 
 deploy:
   - provider: script
