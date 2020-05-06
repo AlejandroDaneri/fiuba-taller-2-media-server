@@ -7,11 +7,7 @@ var firebase = new Firebase()
 app.use(function (req, res, next) {
   res.header(
     'Access-Control-Allow-Origin',
-    'https://fiuba-taller-2-web-admin.herokuapp.com'
-  )
-  res.header(
-    'Access-Control-Allow-Origin',
-    'https://fiuba-taller-2-web-admin-st.herokuapp.com'
+    process.env.DOMAIN_ALLOWED
   )
   res.header(
     'Access-Control-Allow-Headers',
