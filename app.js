@@ -10,6 +10,10 @@ app.use(function (req, res, next) {
     'https://fiuba-taller-2-web-admin.herokuapp.com'
   )
   res.header(
+    'Access-Control-Allow-Origin',
+    'https://fiuba-taller-2-web-admin-st.herokuapp.com'
+  )
+  res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept'
   )
