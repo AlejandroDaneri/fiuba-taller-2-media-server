@@ -5,10 +5,7 @@ var Firebase = require('./firebase')
 var firebase = new Firebase()
 
 app.use(function (req, res, next) {
-  res.header(
-    'Access-Control-Allow-Origin',
-    process.env.DOMAIN_ALLOWED
-  )
+  res.header('Access-Control-Allow-Origin', process.env.DOMAIN_ALLOWED)
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept'
@@ -38,16 +35,5 @@ app.get('/ping', function (req, res) {
   res.send('Ping received!')
   console.info('New ping from:', req.ip)
 })
-
-// // TESTING OTHER SERVERS ENDPOINTS
-// app.get('/auth', function (req, res) {
-//   var request = require('request')
-//   request(process.env.AUTH_BASE_URL, function (error, response, body) {
-//     if (!error && response.statusCode === process.env.OK_CODE) {
-//       console.info('Successfully pinged Auth Server')
-//       res.send(body)
-//     }
-//   })
-// })
 
 module.exports = server

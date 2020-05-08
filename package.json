@@ -4,7 +4,7 @@
   "description": "media server",
   "main": "app.js",
   "scripts": {
-    "test": "jest --coverage && coveralls < coverage/lcov.info",
+    "test": "jest --coverage --maxWorkers=1 && coveralls < coverage/lcov.info",
     "start": "node app.js",
     "lint": "prettier-standard --lint --staged"
   },
