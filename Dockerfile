@@ -1,13 +1,13 @@
 FROM node:13-alpine
 
-RUN mkdir -p /src/app
+RUN mkdir -p /chotuve
 
-WORKDIR /src/app
+WORKDIR /chotuve
 
-COPY package.json /src/app/package.json
+COPY package.json /chotuve/package.json
 
 RUN npm install
 
-COPY . /src/app
+COPY . /chotuve
 
 CMD [ "npm", "start" ]

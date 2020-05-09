@@ -9,7 +9,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - .:/src/app
+      - .:/chotuve
 
   postgres:
     container_name: postgres

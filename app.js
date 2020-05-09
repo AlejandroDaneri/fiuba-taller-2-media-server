@@ -1,8 +1,9 @@
 require('dotenv').config()
 var express = require('express')
 var app = express()
-var Firebase = require('./firebase')
-var firebase = new Firebase()
+var routes = require('./src/routes')
+
+app.use('/', routes)
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', process.env.DOMAIN_ALLOWED)
@@ -13,27 +14,8 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.get('/list', function (req, res) {
-  firebase
-    .listVideoFiles()
-    .then(result => {
-      res.json(result)
-      console.info('Metadata request completed')
-    })
-    .catch(e => console.error(`Could not get files metadata: ${e}`))
-})
-
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
-
 const server = app.listen(process.env.PORT, function () {
   console.info('Example app listening on port', process.env.PORT)
-})
-
-app.get('/ping', function (req, res) {
-  res.send('Ping received!')
-  console.info('New ping from:', req.ip)
 })
 
 module.exports = server
