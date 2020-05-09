@@ -22,8 +22,12 @@ class Firebase {
     // Lists files in the bucket
     console.info('Getting metadata of firebase files')
     const [files] = await this.storage.bucket(bucketName).getFiles()
-    var response = { videos: [] }
+    var videos = {}
+
     for (const file of files) {
+      var fileName = file.name
+        .split('/')
+        [file.name.split('/').length - 1].slice(0, -4)
       const metadataPromise = file.getMetadata()
       const urlPromise = file.getSignedUrl({
         action: 'read',
@@ -32,17 +36,19 @@ class Firebase {
       const [metadata, url] = await Promise.all([metadataPromise, urlPromise])
 
       if (metadata[0].contentType === 'video/mp4') {
-        response.videos.push({
-          id: metadata[0].id,
-          name: metadata[0].name,
-          dateCreated: metadata[0].timeCreated,
-          size: metadata[0].size,
-          type: metadata[0].contentType,
-          url: url[0]
-        })
+        videos[fileName] = {}
+        videos[fileName].id = metadata[0].id
+        videos[fileName].name = metadata[0].name
+        videos[fileName].dateCreated = metadata[0].timeCreated
+        videos[fileName].type = metadata[0].contentType
+        videos[fileName].url = url[0]
+      }
+      if (metadata[0].contentType === 'image/jpeg') {
+        fileName = fileName.slice(6) // deletes thumb_ prefix
+        videos[fileName].thumb = url[0]
       }
     }
-    return response
+    return videos
   }
 }
 
