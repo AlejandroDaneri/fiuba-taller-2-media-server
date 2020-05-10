@@ -41,6 +41,7 @@ class Firebase {
         videos[fileName].name = metadata[0].name
         videos[fileName].dateCreated = metadata[0].timeCreated
         videos[fileName].type = metadata[0].contentType
+        videos[fileName].size = metadata[0].size
         videos[fileName].url = url[0]
       }
       if (metadata[0].contentType === 'image/jpeg') {
