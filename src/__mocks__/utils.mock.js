@@ -7,7 +7,7 @@ var checkPostgres = jest
 
 const utils = jest.mock('../utils', () => {
   return {
-    check_postgres: checkPostgres
+    checkPostgres: checkPostgres
   }
 })
 

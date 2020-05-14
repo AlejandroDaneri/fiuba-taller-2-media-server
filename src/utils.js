@@ -1,5 +1,5 @@
 module.exports = {
-  async check_postgres () {
+  async checkPostgres () {
     const { Client } = require('pg')
     const client = new Client({
       connectionString: process.env.DATABASE_URL

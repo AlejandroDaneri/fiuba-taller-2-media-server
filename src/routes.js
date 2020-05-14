@@ -39,7 +39,7 @@ router.post('/videos', function (req, res) {
 
 router.get('/status', function (req, res) {
   utils
-    .check_postgres()
+    .checkPostgres()
     .then(() => {
       console.log('STATUS: postgres connected')
       res.json({

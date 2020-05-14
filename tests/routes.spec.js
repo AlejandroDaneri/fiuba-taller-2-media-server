@@ -6,7 +6,7 @@ const app = require('../app') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(app)
 
-it('should create a new video', async done => {
+it('should create a new video when payload is fine', async done => {
   const obj = {
     id: 1,
     name: 'string',
@@ -21,6 +21,17 @@ it('should create a new video', async done => {
   expect(res.body).toMatchObject(resp)
   done()
 })
+
+// it('should not create a new video when have wrong payload', async done => {
+//   const obj = {
+//     name: 'string',
+//     dateCreated: 'string',
+//     size: 1234
+//   }
+//   const res = await request.post('/videos').send(obj)
+//   expect(res.statusCode).toEqual(400)
+//   done()
+// })
 
 it('should returns database online', async done => {
   var res = await request.get('/status')
