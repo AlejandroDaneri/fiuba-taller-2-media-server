@@ -4,7 +4,7 @@ services:
     container_name: node-app
     build: .
     depends_on:
-      - postgres
+      - postgres_db
     env_file: .env
     command: npm run dev
     ports:
@@ -12,12 +12,18 @@ services:
     volumes:
       - .:/chotuve
 
-  postgres:
-    container_name: postgres
+  postgres_db:
+    container_name: postgres-db
     image: postgres:12.2
     ports:
       - '35432:5432'
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - database-data:/var/lib/postgresql/data/
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
-      POSTGRES_DB: db
+      POSTGRES_DB: dbtest
+
+volumes:
+  database-data:
