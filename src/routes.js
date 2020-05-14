@@ -2,7 +2,9 @@ var express = require('express')
 var router = express.Router()
 var Firebase = require('./firebase')
 var firebase = new Firebase()
-var tools = require('./utils')
+var utils = require('./utils')
+
+router.use(express.json())
 
 router.get('/list', function (req, res) {
   firebase
@@ -23,8 +25,17 @@ router.get('/ping', function (req, res) {
   console.info('New ping from:', req.ip)
 })
 
+router.post('/videos', function (req, res) {
+  var aux = req.body
+  aux.url = 'url'
+  aux.thumb = 'thumb'
+
+  res.status(201).send(aux)
+  console.info('New video uploaded')
+})
+
 router.get('/status', function (req, res) {
-  tools
+  utils
     .check_postgres()
     .then(() => {
       console.log('STATUS: postgres connected')
@@ -37,8 +48,8 @@ router.get('/status', function (req, res) {
         }
       })
     })
-    .catch(err => {
-      console.error('STATUS: postgres connection error', err.stack)
+    .catch(() => {
+      console.error('STATUS: postgres connection error')
       res.json({
         code: 0,
         message: 'media-server',
