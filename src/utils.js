@@ -6,18 +6,5 @@ module.exports = {
     })
     await client.connect()
     await client.end()
-    return 'online'
   }
 }
-
-// async function check_postgres() {
-// //     const { Client } = require('pg')
-// //     const client = new Client({
-// //       connectionString: process.env.DATABASE_URL
-// //     })
-// //     await client.connect()
-// //     await client.end()
-// }
-//
-//
-// module.export = check_postgres

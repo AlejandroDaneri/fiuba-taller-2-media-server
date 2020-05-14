@@ -22,7 +22,7 @@ it('should create a new video', async done => {
   done()
 })
 
-it('should returns ok', async done => {
+it('should returns database online', async done => {
   var res = await request.get('/status')
 
   expect(res.statusCode).toEqual(200)
@@ -37,7 +37,7 @@ it('should returns ok', async done => {
   done()
 })
 
-it('should returns error', async done => {
+it('should returns database offline', async done => {
   var res = await request.get('/status')
 
   expect(res.statusCode).toEqual(200)

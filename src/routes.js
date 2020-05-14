@@ -13,7 +13,10 @@ router.get('/list', function (req, res) {
       res.json(result)
       console.info('Metadata request completed')
     })
-    .catch(e => console.error(`Could not get files metadata: ${e}`))
+    .catch(e => {
+      console.error(`Could not get files metadata: ${e}`)
+      res.status(400).send('Error obtaining list')
+    })
 })
 
 router.get('/', function (req, res) {
