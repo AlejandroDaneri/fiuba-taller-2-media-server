@@ -1,5 +1,5 @@
 import 'jest'
-
+// eslint-disable-next-line no-unused-vars
 import utils from '../src/__mocks__/utils.mock'
 
 const app = require('../app') // Link to your server file
@@ -81,5 +81,4 @@ it('should gets the ping endpoint successfully', async done => {
 
 afterAll(function (done) {
   app.close(done)
-  utils.autoMockOff() // no effect, only for disable lint problems
 })
