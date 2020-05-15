@@ -1,17 +1,26 @@
 import 'jest'
+
 // eslint-disable-next-line no-unused-vars
 import utils from '../src/__mocks__/utils.mock'
+
+process.env.NODE_ENV = 'test'
 
 const app = require('../app') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(app)
+const knex = require('../db/knex')
+
+beforeEach(() => knex.migrate.rollback().then(() => knex.migrate.latest()))
+
+afterEach(() => knex.migrate.rollback())
 
 it('should create a new video when payload is fine', async done => {
   const obj = {
-    id: 1,
-    name: 'string',
-    dateCreated: 'string',
-    size: 1234
+    video_id: 120,
+    name: 'salchicha',
+    date_created: '2020-05-09T19:00:31.362Z',
+    type: 'video/mp4',
+    size: 3420480
   }
   const res = await request.post('/videos').send(obj)
   expect(res.statusCode).toEqual(201)
@@ -22,15 +31,57 @@ it('should create a new video when payload is fine', async done => {
   done()
 })
 
-// it('should not create a new video when have wrong payload', async done => {
+// it('should not create a new video when payload is wrong', async done => {
 //   const obj = {
-//     name: 'string',
-//     dateCreated: 'string',
-//     size: 1234
+//     "name": "salchicha",
+//     "date_created": "2020-05-09T19:00:31.362Z",
+//     "type": "video/mp4",
+//     "size": 3420480,
 //   }
 //   const res = await request.post('/videos').send(obj)
 //   expect(res.statusCode).toEqual(400)
+//   expect(res.body).toHaveProperty('error', 'User could not be found');
 //   done()
+// })
+
+// it('should get all videos when gets /videos', async done => {
+//   // const obj = [
+//   //   {
+//   //     "id": 3,
+//   //     "video_id": 120,
+//   //     "name": "salchicha",
+//   //     "date_created": "2020-05-09T19:00:31.362Z",
+//   //     "type": "video/mp4",
+//   //     "size": 3420480,
+//   //     "url": "http://algo.com",
+//   //     "thumb": "http://algo.com"
+//   //   },
+//   //   {
+//   //     "id": 4,
+//   //     "video_id": 112,
+//   //     "name": "doberman",
+//   //     "date_created": "2020-05-09T19:00:31.362Z",
+//   //     "type": "video/mp4",
+//   //     "size": 3420480,
+//   //     "url": "http://algo2.com",
+//   //     "thumb": "http://algo3.com"
+//   //   },
+//   //   {
+//   //     "id": 5,
+//   //     "video_id": 125,
+//   //     "name": "ovejero",
+//   //     "date_created": "2020-05-09T19:00:31.362Z",
+//   //     "type": "video/mp4",
+//   //     "size": 3420480,
+//   //     "url": "http://algo23.com",
+//   //     "thumb": "http://alg3o.com"
+//   //   }
+//   // ]
+//   // const res = await request.get('/videos')
+//   //
+//   // expect(res.statusCode).toEqual(200)
+//   // expect(res.body).toStrictEqual(obj)
+//   // done()
 // })
 
 it('should returns database online', async done => {
@@ -79,6 +130,7 @@ it('should gets the ping endpoint successfully', async done => {
   done()
 })
 
-afterAll(function (done) {
+afterAll(async function (done) {
+  await knex.destroy()
   app.close(done)
 })
