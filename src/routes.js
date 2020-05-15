@@ -51,8 +51,9 @@ router.get('/status', function (req, res) {
         }
       })
     })
-    .catch(() => {
+    .catch(err => {
       console.error('STATUS: postgres connection error')
+      console.error(err)
       res.json({
         code: 0,
         message: 'media-server',
