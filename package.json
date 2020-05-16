@@ -53,5 +53,10 @@
   },
   "lint-staged": {
     "*.{js,md}": "npm run lint"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "db/*"
+    ]
   }
 }
