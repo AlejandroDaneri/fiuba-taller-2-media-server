@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest --silent --coverage --maxWorkers=1 && coveralls < coverage/lcov.info",
     "start": "node app.js",
-    "dev": "NODE_ENV=test jest --silent --maxWorkers=1 && NODE_ENV=development nodemon app.js",
-    "dev2": "NODE_ENV=development nodemon app.js",
+    "dev_test": "NODE_ENV=test jest --silent --maxWorkers=1 && NODE_ENV=development nodemon app.js",
+    "dev": "NODE_ENV=development nodemon app.js",
     "lint": "prettier-standard --lint --staged"
   },
   "repository": {

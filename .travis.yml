@@ -14,11 +14,16 @@ before_install:
   - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
 
 install:
-  - npm install
+  # build dockerized environment to run tests
+  - docker-compose -f docker-compose.travis.yml build
 
 script:
-  - npm test
-  - npm build
+  - docker-compose -f docker-compose.travis.yml up -d
+  - sleep 20
+
+after_script:
+  - docker-compose logs -f app
+  - docker-compose down
 
 deploy:
   - provider: script
