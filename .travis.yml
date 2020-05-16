@@ -18,9 +18,7 @@ install:
   # build dockerized environment to run tests
   - docker-compose -f docker-compose.travis.yml build
 
-script: docker-compose -f  docker-compose.travis.yml up \
-  --abort-on-container-exit \
-  --exit-code-from service-test
+script: docker-compose -f docker-compose.travis.yml up --abort-on-container-exit --exit-code-from service-test
 
 deploy:
   - provider: script
