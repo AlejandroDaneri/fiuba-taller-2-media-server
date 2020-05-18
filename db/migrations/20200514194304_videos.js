@@ -12,14 +12,8 @@ exports.up = function (knex) {
     table.string('date_created').notNullable()
     table.string('type').notNullable()
     table.integer('size').notNullable()
-    table
-      .string('url')
-      .notNullable()
-      .unique()
-    table
-      .string('thumb')
-      .notNullable()
-      .unique()
+    table.string('url').notNullable()
+    table.string('thumb').notNullable()
   })
 }
 

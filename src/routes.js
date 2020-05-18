@@ -52,20 +52,22 @@ router.post('/videos', async function (req, res, next) {
     return res.status(400).json({ error: 'Payload is malformed' })
   }
 
-  // revisar que no toma las warning de las db aunque metas repetido
-  queries
-    .addVideo(aux)
-    .then(function (videoID) {
-      return queries.getSingleVideo(videoID) // check if new video is correctly inserted
-    })
-    .then(function (resp) {
-      console.info('New video uploaded')
-      res.status(201).json(resp)
-    })
-    .catch(function (error) {
-      console.warn(error)
-      res.status(500)
-    })
+  var duplicated = false
+
+  try {
+    duplicated = !!(await queries
+      .getSingleVideo(aux.video_id)
+      .catch(err => console.error(err)))
+    if (duplicated) {
+      return res.status(409).json({ error: 'Duplicated' })
+    }
+    var id = await queries.addVideo(aux).catch(err => console.error(err))
+    console.info('New video uploaded')
+    res.status(201).json(id)
+  } catch (err) {
+    console.warn(err)
+    res.status(500).json('error')
+  }
 })
 
 router.get('/videos', function (req, res, next) {

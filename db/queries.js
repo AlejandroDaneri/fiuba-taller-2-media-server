@@ -11,12 +11,12 @@ function getAll () {
 }
 
 function addVideo (content) {
-  return Videos().insert(content, 'id')
+  return Videos().insert(content, 'video_id')
 }
 
 function getSingleVideo (videoID) {
   return Videos()
-    .where('id', parseInt(videoID))
+    .where('video_id', parseInt(videoID))
     .first()
 }
 
