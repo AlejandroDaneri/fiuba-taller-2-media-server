@@ -34,6 +34,7 @@ router.post('/videos', async function (req, res, next) {
   var aux = req.body
   aux.url = 'url'
   aux.thumb = 'thumb'
+  // revisar que no toma las warning de las db aunque metas repetido
   queries
     .addVideo(aux)
     .then(function (videoID) {
@@ -51,6 +52,7 @@ router.post('/videos', async function (req, res, next) {
 })
 
 router.get('/videos', function (req, res, next) {
+  console.log('getting all videos')
   queries
     .getAll()
     .then(function (videos) {
