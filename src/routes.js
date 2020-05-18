@@ -8,6 +8,12 @@ var queries = require('../db/queries')
 
 router.use(express.json())
 
+const empty = input => {
+  if (input === undefined || input === '') {
+    return true
+  }
+}
+
 router.get('/list', function (req, res, next) {
   firebase
     .listVideoFiles()
@@ -34,6 +40,18 @@ router.post('/videos', async function (req, res, next) {
   var aux = req.body
   aux.url = 'url'
   aux.thumb = 'thumb'
+
+  if (
+    empty(aux.video_id) ||
+    empty(aux.name) ||
+    empty(aux.date_created) ||
+    empty(aux.type) ||
+    empty(aux.size)
+  ) {
+    console.warn('Malformed payload in post /videos')
+    return res.status(400).json({ error: 'Payload is malformed' })
+  }
+
   // revisar que no toma las warning de las db aunque metas repetido
   queries
     .addVideo(aux)
@@ -46,7 +64,7 @@ router.post('/videos', async function (req, res, next) {
     })
     .catch(function (error) {
       console.warn(error)
-      res.status(400).json({ error: 'Payload is malformed' })
+      res.status(500)
     })
 })
 
