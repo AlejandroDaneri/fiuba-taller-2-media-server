@@ -36,18 +36,18 @@ it('should create a new video when payload is fine', async done => {
   done()
 })
 
-// it('should not create a new video when payload is wrong', async done => {
-//   const obj = {
-//     "name": "salchicha",
-//     "date_created": "2020-05-09T19:00:31.362Z",
-//     "type": "video/mp4",
-//     "size": 3420480,
-//   }
-//   const res = await request.post('/videos').send(obj)
-//   expect(res.statusCode).toEqual(400)
-//   expect(res.body).toHaveProperty('error', 'User could not be found');
-//   done()
-// })
+it('should not create a new video when payload is wrong', async done => {
+  const obj = {
+    name: 'salchicha',
+    date_created: '2020-05-09T19:00:31.362Z',
+    type: 'video/mp4',
+    size: 3420480
+  }
+  const res = await request.post('/videos').send(obj)
+  expect(res.statusCode).toEqual(400)
+  expect(res.body).toHaveProperty('error', 'Payload is malformed')
+  done()
+})
 
 it('should get all videos when gets /videos', async done => {
   const expected = [

@@ -8,7 +8,7 @@ var queries = require('../db/queries')
 
 router.use(express.json())
 
-router.get('/list', function (req, res) {
+router.get('/list', function (req, res, next) {
   firebase
     .listVideoFiles()
     .then(result => {
@@ -21,11 +21,11 @@ router.get('/list', function (req, res) {
     })
 })
 
-router.get('/', function (req, res) {
+router.get('/', function (req, res, next) {
   res.send('Hello World!')
 })
 
-router.get('/ping', function (req, res) {
+router.get('/ping', function (req, res, next) {
   res.send('Ping received!')
   console.info('New ping from:', req.ip)
 })
@@ -45,7 +45,8 @@ router.post('/videos', async function (req, res, next) {
       res.status(201).json(resp)
     })
     .catch(function (error) {
-      next(error)
+      console.warn(error)
+      res.status(400).json({ error: 'Payload is malformed' })
     })
 })
 
@@ -66,7 +67,7 @@ router.get('/status', function (req, res) {
   utils
     .checkPostgres()
     .then(() => {
-      console.log('STATUS: postgres connected')
+      console.info('STATUS: postgres connected')
       res.json({
         code: 0,
         message: 'media-server',
