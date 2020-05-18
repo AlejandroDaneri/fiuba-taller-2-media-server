@@ -41,14 +41,12 @@ router.post('/videos', async function (req, res, next) {
       return queries.getSingleVideo(videoID) // check if new video is correctly inserted
     })
     .then(function (resp) {
+      console.info('New video uploaded')
       res.status(201).json(resp)
     })
     .catch(function (error) {
       next(error)
     })
-
-  res.status(201).send(aux)
-  console.info('New video uploaded')
 })
 
 router.get('/videos', function (req, res, next) {
