@@ -8,7 +8,8 @@
     "start": "node app.js",
     "dev": "NODE_ENV=development nodemon app.js",
     "lint": "prettier-standard --lint --staged",
-    "test": "NODE_ENV=test jest --coverage --verbose --maxWorkers=1"
+    "test": "NODE_ENV=test jest --coverage --verbose --maxWorkers=1",
+    "heroku-postbuild": "knex migrate:latest"
   },
   "repository": {
     "type": "git",

@@ -2,6 +2,10 @@ var admin = require('firebase-admin')
 
 const bucketName = 'chotuve-grupo8.appspot.com'
 const baseVideosUrl = 'uploads/videos/test/'
+const config = {
+  action: 'read',
+  expires: Date.now() + 1000 * 60 * 60
+}
 
 class Firebase {
   constructor () {
@@ -30,10 +34,7 @@ class Firebase {
         .split('/')
         [file.name.split('/').length - 1].slice(0, -4)
       const metadataPromise = file.getMetadata()
-      const urlPromise = file.getSignedUrl({
-        action: 'read',
-        expires: Date.now() + 1000 * 60 * 60
-      })
+      const urlPromise = file.getSignedUrl(config)
       const [metadata, url] = await Promise.all([metadataPromise, urlPromise])
 
       if (metadata[0].contentType === 'video/mp4') {
@@ -54,23 +55,16 @@ class Firebase {
   }
 
   async getLinks (fileName) {
-    const videoFile = await this.storage
+    const video = await this.storage
       .bucket(bucketName)
       .file(`${baseVideosUrl}${fileName}.mp4`)
+      .getSignedUrl(config)
 
-    const video = await videoFile.getSignedUrl({
-      action: 'read',
-      expires: Date.now() + 1000 * 60 * 60
-    })
-
-    const imgFile = await this.storage
+    const img = await this.storage
       .bucket(bucketName)
       .file(`${baseVideosUrl}thumb_${fileName}.jpg`)
+      .getSignedUrl(config)
 
-    const img = await imgFile.getSignedUrl({
-      action: 'read',
-      expires: Date.now() + 1000 * 60 * 60
-    })
     return [video[0], img[0]]
   }
 }
