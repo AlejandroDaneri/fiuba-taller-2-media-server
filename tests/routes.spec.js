@@ -30,7 +30,7 @@ it('should create a new video when payload is fine', async done => {
   const res = await request.post('/videos').send(obj)
   expect(res.statusCode).toEqual(201)
   var resp = res.body
-  expect(resp).toStrictEqual([2000])
+  expect(resp).toMatchObject(obj)
   done()
 })
 

@@ -63,9 +63,9 @@ router.post('/videos', async function (req, res, next) {
       console.warn('POST /videos: canceled due duplicated video_id')
       return res.status(409).json({ error: 'Duplicated' })
     }
-    var id = await queries.addVideo(aux).catch(err => console.error(err))
+    await queries.addVideo(aux).catch(err => console.error(err))
     console.info('POST /videos: New video uploaded')
-    res.status(201).send(id)
+    res.status(201).send(aux)
   } catch (err) {
     console.warn(err)
     res.status(500).json('error')
