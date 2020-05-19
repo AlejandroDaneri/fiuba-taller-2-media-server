@@ -58,6 +58,7 @@ router.post('/videos', async function (req, res, next) {
   try {
     duplicated = !!(await queries
       .getSingleVideo(aux.video_id)
+      .then(result => result.length > 0)
       .catch(err => console.error(err)))
     if (duplicated) {
       console.warn('POST /videos: canceled due duplicated video_id')
@@ -72,17 +73,30 @@ router.post('/videos', async function (req, res, next) {
   }
 })
 
-router.get('/videos', function (req, res, next) {
-  queries
-    .getAll()
-    .then(function (videos) {
-      console.info('GET /videos: Getting all videos')
-      res.status(200).json(videos)
-    })
-    .catch(function (error) {
-      console.error('videos cannot be obtained')
-      next(error)
-    })
+router.get('/videos', async function (req, res, next) {
+  if (req.query.id) {
+    await queries
+      .getSingleVideo(req.query.id)
+      .then(function (video) {
+        console.info('GET /videos: Getting single video')
+        res.status(200).json({ videos: video })
+      })
+      .catch(function (error) {
+        console.error('Video cannot be obtained')
+        next(error)
+      })
+  } else {
+    await queries
+      .getAll()
+      .then(function (videos) {
+        console.info('GET /videos: Getting all videos')
+        res.status(200).json({ videos: videos })
+      })
+      .catch(function (error) {
+        console.error('videos cannot be obtained')
+        next(error)
+      })
+  }
 })
 
 router.get('/status', function (req, res) {

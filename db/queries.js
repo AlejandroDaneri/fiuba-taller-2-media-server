@@ -15,9 +15,7 @@ function addVideo (content) {
 }
 
 function getSingleVideo (videoID) {
-  return Videos()
-    .where('video_id', parseInt(videoID))
-    .first()
+  return Videos().where('video_id', parseInt(videoID))
 }
 
 module.exports = {
