@@ -12,8 +12,8 @@ exports.up = function (knex) {
     table.string('date_created').notNullable()
     table.string('type').notNullable()
     table.integer('size').notNullable()
-    table.string('url').notNullable()
-    table.string('thumb').notNullable()
+    table.string('url', 1000).notNullable()
+    table.string('thumb', 1000).notNullable()
   })
 }
 

@@ -33,13 +33,14 @@ router.get('/', function (req, res, next) {
 
 router.get('/ping', function (req, res, next) {
   res.send('Ping received!')
-  console.info('New ping from:', req.ip)
+  console.info('GET /ping : New ping from', req.ip)
 })
 
 router.post('/videos', async function (req, res, next) {
   var aux = req.body
-  aux.url = 'url'
-  aux.thumb = 'thumb'
+  const urls = await firebase.getLinks(aux.name)
+  aux.url = urls[0]
+  aux.thumb = urls[1]
 
   if (
     empty(aux.video_id) ||
@@ -48,7 +49,7 @@ router.post('/videos', async function (req, res, next) {
     empty(aux.type) ||
     empty(aux.size)
   ) {
-    console.warn('Malformed payload in post /videos')
+    console.warn('POST /videos: Malformed payload')
     return res.status(400).json({ error: 'Payload is malformed' })
   }
 
@@ -59,11 +60,12 @@ router.post('/videos', async function (req, res, next) {
       .getSingleVideo(aux.video_id)
       .catch(err => console.error(err)))
     if (duplicated) {
+      console.warn('POST /videos: canceled due duplicated video_id')
       return res.status(409).json({ error: 'Duplicated' })
     }
     var id = await queries.addVideo(aux).catch(err => console.error(err))
-    console.info('New video uploaded')
-    res.status(201).json(id)
+    console.info('POST /videos: New video uploaded')
+    res.status(201).send(id)
   } catch (err) {
     console.warn(err)
     res.status(500).json('error')
@@ -71,10 +73,10 @@ router.post('/videos', async function (req, res, next) {
 })
 
 router.get('/videos', function (req, res, next) {
-  console.log('getting all videos')
   queries
     .getAll()
     .then(function (videos) {
+      console.info('GET /videos: Getting all videos')
       res.status(200).json(videos)
     })
     .catch(function (error) {
@@ -87,7 +89,7 @@ router.get('/status', function (req, res) {
   utils
     .checkPostgres()
     .then(() => {
-      console.info('STATUS: postgres connected')
+      console.info('GET /status: postgres connected')
       res.json({
         code: 0,
         message: 'media-server',
@@ -98,7 +100,7 @@ router.get('/status', function (req, res) {
       })
     })
     .catch(err => {
-      console.error('STATUS: postgres connection error')
+      console.error('GET /status: postgres connection error')
       console.error(err)
       res.json({
         code: 0,

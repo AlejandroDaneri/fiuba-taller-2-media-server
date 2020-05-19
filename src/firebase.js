@@ -1,6 +1,7 @@
 var admin = require('firebase-admin')
 
 const bucketName = 'chotuve-grupo8.appspot.com'
+const baseVideosUrl = 'uploads/videos/test/'
 
 class Firebase {
   constructor () {
@@ -50,6 +51,27 @@ class Firebase {
       }
     }
     return videos
+  }
+
+  async getLinks (fileName) {
+    const videoFile = await this.storage
+      .bucket(bucketName)
+      .file(`${baseVideosUrl}${fileName}.mp4`)
+
+    const video = await videoFile.getSignedUrl({
+      action: 'read',
+      expires: Date.now() + 1000 * 60 * 60
+    })
+
+    const imgFile = await this.storage
+      .bucket(bucketName)
+      .file(`${baseVideosUrl}thumb_${fileName}.jpg`)
+
+    const img = await imgFile.getSignedUrl({
+      action: 'read',
+      expires: Date.now() + 1000 * 60 * 60
+    })
+    return [video[0], img[0]]
   }
 }
 
