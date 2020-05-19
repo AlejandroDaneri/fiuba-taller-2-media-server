@@ -4,9 +4,12 @@
   "description": "media server",
   "main": "app.js",
   "scripts": {
-    "test": "jest --coverage --maxWorkers=1 && coveralls < coverage/lcov.info",
+    "coverage": "jest --silent --coverage --maxWorkers=1 && coveralls < coverage/lcov.info",
     "start": "node app.js",
-    "lint": "prettier-standard --lint --staged"
+    "dev": "NODE_ENV=development nodemon app.js",
+    "lint": "prettier-standard --lint --staged",
+    "test": "NODE_ENV=test jest --coverage --verbose --maxWorkers=1",
+    "heroku-postbuild": "knex migrate:latest"
   },
   "repository": {
     "type": "git",
@@ -37,7 +40,9 @@
     "firebase-mock": "^2.3.2",
     "husky": "^4.2.5",
     "jest": "^25.5.4",
+    "knex": "^0.21.1",
     "lint-staged": "^10.1.7",
+    "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "prettier-standard": "^16.3.0",
     "supertest": "^4.0.2"
@@ -49,5 +54,10 @@
   },
   "lint-staged": {
     "*.{js,md}": "npm run lint"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/*"
+    ]
   }
 }

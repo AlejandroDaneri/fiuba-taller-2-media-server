@@ -15,10 +15,10 @@ before_install:
 
 install:
   - npm install
+  # build dockerized environment to run tests
+  - docker-compose -f docker-compose.travis.yml build
 
-script:
-  - npm test
-  - npm build
+script: docker-compose -f docker-compose.travis.yml up --abort-on-container-exit --exit-code-from app
 
 deploy:
   - provider: script

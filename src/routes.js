@@ -2,32 +2,94 @@ var express = require('express')
 var router = express.Router()
 var Firebase = require('./firebase')
 var firebase = new Firebase()
-var tools = require('./utils')
+var utils = require('./utils')
 
-router.get('/list', function (req, res) {
+var queries = require('../db/queries')
+
+router.use(express.json())
+
+const empty = input => {
+  if (input === undefined || input === '') {
+    return true
+  }
+}
+
+router.get('/list', function (req, res, next) {
   firebase
     .listVideoFiles()
     .then(result => {
       res.json(result)
       console.info('Metadata request completed')
     })
-    .catch(e => console.error(`Could not get files metadata: ${e}`))
+    .catch(e => {
+      console.error(`Could not get files metadata: ${e}`)
+      res.status(400).send('Error obtaining list')
+    })
 })
 
-router.get('/', function (req, res) {
+router.get('/', function (req, res, next) {
   res.send('Hello World!')
 })
 
-router.get('/ping', function (req, res) {
+router.get('/ping', function (req, res, next) {
   res.send('Ping received!')
-  console.info('New ping from:', req.ip)
+  console.info('GET /ping : New ping from', req.ip)
+})
+
+router.post('/videos', async function (req, res, next) {
+  var aux = req.body
+  const urls = await firebase.getLinks(aux.name)
+  aux.url = urls[0]
+  aux.thumb = urls[1]
+
+  if (
+    empty(aux.video_id) ||
+    empty(aux.name) ||
+    empty(aux.date_created) ||
+    empty(aux.type) ||
+    empty(aux.size)
+  ) {
+    console.warn('POST /videos: Malformed payload')
+    return res.status(400).json({ error: 'Payload is malformed' })
+  }
+
+  var duplicated = false
+
+  try {
+    duplicated = !!(await queries
+      .getSingleVideo(aux.video_id)
+      .catch(err => console.error(err)))
+    if (duplicated) {
+      console.warn('POST /videos: canceled due duplicated video_id')
+      return res.status(409).json({ error: 'Duplicated' })
+    }
+    await queries.addVideo(aux).catch(err => console.error(err))
+    console.info('POST /videos: New video uploaded')
+    res.status(201).send(aux)
+  } catch (err) {
+    console.warn(err)
+    res.status(500).json('error')
+  }
+})
+
+router.get('/videos', function (req, res, next) {
+  queries
+    .getAll()
+    .then(function (videos) {
+      console.info('GET /videos: Getting all videos')
+      res.status(200).json(videos)
+    })
+    .catch(function (error) {
+      console.error('videos cannot be obtained')
+      next(error)
+    })
 })
 
 router.get('/status', function (req, res) {
-  tools
-    .check_postgres()
+  utils
+    .checkPostgres()
     .then(() => {
-      console.log('STATUS: postgres connected')
+      console.info('GET /status: postgres connected')
       res.json({
         code: 0,
         message: 'media-server',
@@ -38,7 +100,8 @@ router.get('/status', function (req, res) {
       })
     })
     .catch(err => {
-      console.error('STATUS: postgres connection error', err.stack)
+      console.error('GET /status: postgres connection error')
+      console.error(err)
       res.json({
         code: 0,
         message: 'media-server',

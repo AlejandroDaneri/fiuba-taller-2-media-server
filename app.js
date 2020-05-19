@@ -4,6 +4,7 @@ var cors = require('cors')
 var app = express()
 var routes = require('./src/routes')
 
+app.use(express.json())
 app.use(cors())
 app.use('/', routes)
 
