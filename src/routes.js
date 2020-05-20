@@ -6,6 +6,7 @@ var utils = require('./utils')
 
 var queries = require('../db/queries')
 var helper = require('./helpers')
+var httpStatus = require('http-status-codes')
 
 router.use(express.json())
 
@@ -39,20 +40,22 @@ router.post('/videos', async function (req, res, next) {
 
   if (helper.isMalformed(reqBody)) {
     console.warn('POST /videos: Malformed payload')
-    return res.status(400).json({ error: 'Payload is malformed' })
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .json({ error: 'Payload is malformed' })
   }
 
   try {
     if (await helper.checkDuplicate(reqBody.video_id)) {
       console.warn('POST /videos: canceled due duplicated video_id')
-      return res.status(409).json({ error: 'Duplicated' })
+      return res.status(httpStatus.CONFLICT).json({ error: 'Duplicated' })
     }
     await queries.addVideo(reqBody).catch(err => console.error(err))
     console.info('POST /videos: New video uploaded')
-    res.status(201).send(reqBody)
+    res.status(httpStatus.CREATED).send(reqBody)
   } catch (err) {
     console.error(err)
-    res.status(500).json('error')
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json('error')
   }
 })
 
@@ -61,11 +64,13 @@ router.get('/videos', async function (req, res, next) {
     .getVideos(req.query.id)
     .then(function ([message, result]) {
       console.info(message)
-      res.status(200).json({ videos: result })
+      res.status(httpStatus.OK).json({ videos: result })
     })
     .catch(function (error) {
       console.error(error)
-      res.status(500).json({ error: 'Video cannot be obtained' })
+      res
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Video cannot be obtained' })
     })
 })
 
