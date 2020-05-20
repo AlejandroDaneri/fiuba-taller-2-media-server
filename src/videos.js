@@ -36,8 +36,8 @@ videos.post('/', async function (req, res, next) {
   }
 })
 
-videos.get('/', async function (req, res, next) {
-  await helper
+videos.get('/', function (req, res, next) {
+  helper
     .getVideos(req.query.id)
     .then(function ([message, result]) {
       console.info(message)
