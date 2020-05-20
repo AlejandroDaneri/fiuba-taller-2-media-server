@@ -17,50 +17,46 @@ beforeEach(() =>
     .then(() => knex.seed.run())
 )
 
-it('should returns database online', async done => {
-  var res = await request.get('/status')
-
-  expect(res.statusCode).toEqual(200)
-  expect(res.body).toMatchObject({
-    code: 0,
-    message: 'media-server',
-    'data:': {
-      server_status: 'online',
-      database_status: 'online'
-    }
+it('should returns database online', () => {
+  request.get('/status').then(res => {
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toMatchObject({
+      code: 0,
+      message: 'media-server',
+      'data:': {
+        server_status: 'online',
+        database_status: 'online'
+      }
+    })
   })
-  done()
 })
 
-it('should returns database offline', async done => {
-  var res = await request.get('/status')
-
-  expect(res.statusCode).toEqual(200)
-  expect(res.body).toMatchObject({
-    code: 0,
-    message: 'media-server',
-    'data:': {
-      server_status: 'online',
-      database_status: 'offline'
-    }
+it('should returns database offline', () => {
+  request.get('/status').then(res => {
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toMatchObject({
+      code: 0,
+      message: 'media-server',
+      'data:': {
+        server_status: 'online',
+        database_status: 'offline'
+      }
+    })
   })
-  done()
 })
 
-it('should gets the root endpoint successfully', async done => {
-  const response = await request.get('/')
-
-  expect(response.status).toBe(200)
-  expect(response.text).toBe('Hello World!')
-  done()
+it('should gets the root endpoint successfully', () => {
+  request.get('/').then(res => {
+    expect(res.status).toBe(200)
+    expect(res.text).toBe('Hello World!')
+  })
 })
 
-it('should gets the ping endpoint successfully', async done => {
-  const response = await request.get('/ping')
-
-  expect(response.status).toBe(200)
-  expect(response.text).toBe('Ping received!')
-  done()
+it('should gets the ping endpoint successfully', () => {
+  request.get('/ping').then(res => {
+    expect(res.status).toBe(200)
+    expect(res.text).toBe('Ping received!')
+  })
 })
 
 afterAll(async function (done) {

@@ -15,7 +15,7 @@ beforeEach(() =>
     .then(() => knex.seed.run())
 )
 
-it('should create a new video when payload is fine', async done => {
+it('should create a new video when payload is fine', () => {
   const obj = {
     video_id: 1234,
     name: 'salchicha',
@@ -23,27 +23,33 @@ it('should create a new video when payload is fine', async done => {
     type: 'video/mp4',
     size: 3420480
   }
-  const res = await request.post('/videos').send(obj)
-  expect(res.statusCode).toEqual(201)
-  var resp = res.body
-  expect(resp).toMatchObject(obj)
-  done()
+  request
+    .post('/videos')
+    .send(obj)
+    .then(res => {
+      expect(res.statusCode).toEqual(201)
+      var resp = res.body
+      expect(resp).toMatchObject(obj)
+    })
 })
 
-it('should not create a new video when payload is wrong', async done => {
+it('should not create a new video when payload is wrong', () => {
   const obj = {
     name: 'salchicha',
     date_created: '2020-05-09T19:00:31.362Z',
     type: 'video/mp4',
     size: 3420480
   }
-  const res = await request.post('/videos').send(obj)
-  expect(res.statusCode).toEqual(400)
-  expect(res.body).toMatchObject({ error: 'Payload is malformed' })
-  done()
+  request
+    .post('/videos')
+    .send(obj)
+    .then(res => {
+      expect(res.statusCode).toEqual(400)
+      expect(res.body).toMatchObject({ error: 'Payload is malformed' })
+    })
 })
 
-it('should not create a new video when video_id is duplicated', async done => {
+it('should not create a new video when video_id is duplicated', () => {
   const obj = {
     video_id: 120,
     name: 'salchicha',
@@ -51,13 +57,16 @@ it('should not create a new video when video_id is duplicated', async done => {
     type: 'video/mp4',
     size: 3420480
   }
-  const res = await request.post('/videos').send(obj)
-  expect(res.statusCode).toEqual(409)
-  expect(res.body).toMatchObject({ error: 'Duplicated' })
-  done()
+  request
+    .post('/videos')
+    .send(obj)
+    .then(res => {
+      expect(res.statusCode).toEqual(409)
+      expect(res.body).toMatchObject({ error: 'Duplicated' })
+    })
 })
 
-it('should get all videos when gets /videos', async done => {
+it('should get all videos when gets /videos', () => {
   const expected = [
     {
       id: 1,
@@ -90,14 +99,13 @@ it('should get all videos when gets /videos', async done => {
       thumb: 'http://alg3o.com'
     }
   ]
-  const res = await request.get('/videos')
-
-  expect(res.statusCode).toEqual(200)
-  expect(res.body).toStrictEqual({ videos: expected })
-  done()
+  request.get('/videos').then(res => {
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toStrictEqual({ videos: expected })
+  })
 })
 
-it('should get specific video when gets /videos?id', async done => {
+it('should get specific video when gets /videos?id', () => {
   const expected = [
     {
       video_id: 120,
@@ -109,10 +117,10 @@ it('should get specific video when gets /videos?id', async done => {
       thumb: 'http://algo.com'
     }
   ]
-  const res = await request.get('/videos?id=120')
-  expect(res.statusCode).toEqual(200)
-  expect(res.body).toMatchObject({ videos: expected })
-  done()
+  request.get('/videos?id=120').then(res => {
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toMatchObject({ videos: expected })
+  })
 })
 
 afterAll(async function (done) {

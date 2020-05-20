@@ -4,7 +4,7 @@
   "description": "media server",
   "main": "app.js",
   "scripts": {
-    "coverage": "jest --silent --coverage --maxWorkers=1 && coveralls < coverage/lcov.info",
+    "coverage": "jest --silent --colors --coverage --maxWorkers=1 && coveralls < coverage/lcov.info",
     "start": "node app.js",
     "dev": "NODE_ENV=development nodemon app.js",
     "lint": "prettier-standard --lint --staged",
