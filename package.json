@@ -8,7 +8,7 @@
     "start": "node app.js",
     "dev": "NODE_ENV=development nodemon app.js",
     "lint": "prettier-standard --lint --staged",
-    "test": "NODE_ENV=test jest --coverage --maxWorkers=1",
+    "test": "NODE_ENV=test jest --colors --notify --coverage --maxWorkers=1",
     "heroku-postbuild": "/chotuve/node_modules/knex/bin/cli.js migrate:latest"
   },
   "repository": {

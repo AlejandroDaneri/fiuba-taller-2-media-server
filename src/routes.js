@@ -1,25 +1,24 @@
 var express = require('express')
 var router = express.Router()
-var Firebase = require('./firebase')
-var firebase = new Firebase()
-var utils = require('./utils')
+var videos = require('./videos')
 
-var queries = require('../db/queries')
-var helper = require('./helpers')
+var Firebase = require('./firebase')
+export var fb = new Firebase()
+var utils = require('./utils')
 var httpStatus = require('http-status-codes')
 
+router.use('/videos', videos)
 router.use(express.json())
 
 router.get('/list', function (req, res, next) {
-  firebase
-    .listVideoFiles()
+  fb.listVideoFiles()
     .then(result => {
       res.json(result)
       console.info('Metadata request completed')
     })
     .catch(e => {
       console.error(`Could not get files metadata: ${e}`)
-      res.status(400).send('Error obtaining list')
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).send('Error obtaining list')
     })
 })
 
@@ -30,48 +29,6 @@ router.get('/', function (req, res, next) {
 router.get('/ping', function (req, res, next) {
   res.send('Ping received!')
   console.info('GET /ping : New ping from', req.ip)
-})
-
-router.post('/videos', async function (req, res, next) {
-  var reqBody = req.body
-  const urls = await firebase.getLinks(reqBody.name)
-  reqBody.url = urls[0]
-  reqBody.thumb = urls[1]
-
-  if (helper.isMalformed(reqBody)) {
-    console.warn('POST /videos: Malformed payload')
-    return res
-      .status(httpStatus.BAD_REQUEST)
-      .json({ error: 'Payload is malformed' })
-  }
-
-  try {
-    if (await helper.checkDuplicate(reqBody.video_id)) {
-      console.warn('POST /videos: canceled due duplicated video_id')
-      return res.status(httpStatus.CONFLICT).json({ error: 'Duplicated' })
-    }
-    await queries.addVideo(reqBody).catch(err => console.error(err))
-    console.info('POST /videos: New video uploaded')
-    res.status(httpStatus.CREATED).send(reqBody)
-  } catch (err) {
-    console.error(err)
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).json('error')
-  }
-})
-
-router.get('/videos', async function (req, res, next) {
-  await helper
-    .getVideos(req.query.id)
-    .then(function ([message, result]) {
-      console.info(message)
-      res.status(httpStatus.OK).json({ videos: result })
-    })
-    .catch(function (error) {
-      console.error(error)
-      res
-        .status(httpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: 'Video cannot be obtained' })
-    })
 })
 
 router.get('/status', function (req, res) {
