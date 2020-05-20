@@ -1,5 +1,3 @@
-import * as fb from './firebase'
-
 var express = require('express')
 var videos = express.Router()
 
@@ -7,6 +5,8 @@ var httpStatus = require('http-status-codes')
 var queries = require('../db/queries')
 var helper = require('./helpers')
 
+var Firebase = require('./firebase')
+var fb = new Firebase()
 videos.use(express.json())
 
 videos.post('/', async function (req, res, next) {

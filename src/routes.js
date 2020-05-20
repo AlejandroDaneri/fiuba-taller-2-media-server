@@ -3,7 +3,7 @@ var router = express.Router()
 var videos = require('./videos')
 
 var Firebase = require('./firebase')
-export var fb = new Firebase()
+var fb = new Firebase()
 var utils = require('./utils')
 var httpStatus = require('http-status-codes')
 

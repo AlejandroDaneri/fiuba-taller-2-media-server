@@ -9,6 +9,9 @@ const config = {
 
 class Firebase {
   constructor () {
+    if (Firebase.instance) {
+      return Firebase.instance
+    }
     this.firebaseConfig = {
       apiKey: 'AIzaSyD2R77K2nWb_iJbCIzgTCsFZ36kxDF_zr0',
       authDomain: 'chotuve-grupo8.firebaseapp.com',
@@ -21,6 +24,7 @@ class Firebase {
     }
     this.fapp = admin.initializeApp(this.firebaseConfig)
     this.storage = this.fapp.storage()
+    Firebase.instance = this
   }
 
   async listVideoFiles () {
