@@ -2,6 +2,7 @@ version: '3'
 services:
   app:
     container_name: node-app
+    image: media_server:latest
     build:
       context: .
     depends_on:

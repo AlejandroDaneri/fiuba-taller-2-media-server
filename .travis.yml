@@ -24,7 +24,7 @@ deploy:
   - provider: script
     script:
       # build docker images, push to dockerhub & heroku
-      docker build -t alejandrodaneri/media-node-chotuve:staging .;
+      docker tag media_server:latest alejandrodaneri/media-node-chotuve:staging;
       docker tag alejandrodaneri/media-node-chotuve:staging  registry.heroku.com/$HEROKU_APP_NAME_STAGING/web;
       docker push alejandrodaneri/media-node-chotuve:staging;
       docker push registry.heroku.com/$HEROKU_APP_NAME_STAGING/web;
