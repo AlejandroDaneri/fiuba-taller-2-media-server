@@ -20,10 +20,14 @@ install:
 
 script: docker-compose -f docker-compose.travis.yml up --abort-on-container-exit --exit-code-from app
 
+after_success:
+  # submit results to coveralls, on success
+  - coveralls < coverage/lcov.info
+
 deploy:
   - provider: script
     script:
-      # build docker images, push to dockerhub & heroku
+      # push to dockerhub & heroku
       docker tag media_server:latest alejandrodaneri/media-node-chotuve:staging;
       docker tag alejandrodaneri/media-node-chotuve:staging  registry.heroku.com/$HEROKU_APP_NAME_STAGING/web;
       docker push alejandrodaneri/media-node-chotuve:staging;
@@ -34,8 +38,8 @@ deploy:
 
   - provider: script
     script:
-      # build docker images, push to dockerhub & heroku
-      docker build -t alejandrodaneri/media-node-chotuve:production .;
+      # push to dockerhub & heroku
+      docker tag media_server:latest alejandrodaneri/media-node-chotuve:production;
       docker tag alejandrodaneri/media-node-chotuve:production  registry.heroku.com/$HEROKU_APP_NAME/web;
       docker push alejandrodaneri/media-node-chotuve:production;
       docker push registry.heroku.com/$HEROKU_APP_NAME/web;
