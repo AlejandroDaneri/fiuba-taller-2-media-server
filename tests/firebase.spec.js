@@ -1,17 +1,11 @@
 import 'jest'
 
-const app = require('../app') // Link to your server file
-const supertest = require('supertest')
-const request = supertest(app)
+var Firebase = require('../src/firebase')
+var fb = new Firebase()
 
-it('should gets json containing a list of all videos', async done => {
-  request
-    .get('/list')
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200, done)
-})
-
-afterAll(function (done) {
-  app.close(done)
+it('should obtain links of url and thumb', () => {
+  fb.getLinks('fileExample').then(([video, thumb]) => {
+    expect(video).toMatch(/(https:)/i)
+    expect(thumb).toMatch(/(https:)/i)
+  })
 })

@@ -4,7 +4,7 @@ const bucketName = 'chotuve-grupo8.appspot.com'
 const baseVideosUrl = 'uploads/videos/test/'
 const config = {
   action: 'read',
-  expires: Date.now() + 1000 * 60 * 60
+  expires: Date.now() + 10000 * 60 * 60
 }
 
 class Firebase {
@@ -25,37 +25,6 @@ class Firebase {
     this.fapp = admin.initializeApp(this.firebaseConfig)
     this.storage = this.fapp.storage()
     Firebase.instance = this
-  }
-
-  async listVideoFiles () {
-    // Lists files in the bucket
-    console.info('Getting metadata of firebase files')
-    const [files] = await this.storage.bucket(bucketName).getFiles()
-    var videos = {}
-
-    for (const file of files) {
-      var fileName = file.name
-        .split('/')
-        [file.name.split('/').length - 1].slice(0, -4)
-      const metadataPromise = file.getMetadata()
-      const urlPromise = file.getSignedUrl(config)
-      const [metadata, url] = await Promise.all([metadataPromise, urlPromise])
-
-      if (metadata[0].contentType === 'video/mp4') {
-        videos[fileName] = {}
-        videos[fileName].id = metadata[0].id
-        videos[fileName].name = metadata[0].name
-        videos[fileName].dateCreated = metadata[0].timeCreated
-        videos[fileName].type = metadata[0].contentType
-        videos[fileName].size = metadata[0].size
-        videos[fileName].url = url[0]
-      }
-      if (metadata[0].contentType === 'image/jpeg') {
-        fileName = fileName.slice(6) // deletes thumb_ prefix
-        videos[fileName].thumb = url[0]
-      }
-    }
-    return videos
   }
 
   async getLinks (fileName) {

@@ -105,7 +105,7 @@ it('should get all videos when gets /videos', () => {
   })
 })
 
-it('should get specific video when gets /videos?id', () => {
+it('should get specific video when gets /videos?id', done => {
   const expected = [
     {
       video_id: 120,
@@ -120,6 +120,7 @@ it('should get specific video when gets /videos?id', () => {
   request.get('/videos?id=120').then(res => {
     expect(res.statusCode).toEqual(200)
     expect(res.body).toMatchObject({ videos: expected })
+    done()
   })
 })
 
