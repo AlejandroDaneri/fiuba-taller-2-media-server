@@ -4,7 +4,7 @@ const bucketName = 'chotuve-grupo8.appspot.com'
 const baseVideosUrl = 'uploads/videos/test/'
 const config = {
   action: 'read',
-  expires: Date.now() + 10000 * 60 * 60
+  expires: Date.now() + 1000 * 60 * 60 * 3000
 }
 
 class Firebase {
