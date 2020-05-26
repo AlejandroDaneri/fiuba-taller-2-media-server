@@ -5,7 +5,7 @@ import utils from '../src/__mocks__/utils.mock'
 
 process.env.NODE_ENV = 'test'
 
-const app = require('../app') // Link to your server file
+const app = require('../app')
 const supertest = require('supertest')
 const request = supertest(app)
 const knex = require('../db/knex')

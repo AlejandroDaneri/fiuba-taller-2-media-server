@@ -2,7 +2,7 @@ import 'jest'
 
 process.env.NODE_ENV = 'test'
 
-const app = require('../app') // Link to your server file
+const app = require('../app')
 const supertest = require('supertest')
 const request = supertest(app)
 const knex = require('../db/knex')
@@ -17,7 +17,7 @@ beforeEach(() =>
 
 it('should create a new video when payload is fine', () => {
   const obj = {
-    video_id: 1234,
+    video_id: '1234',
     name: 'salchicha',
     date_created: '2020-05-09T19:00:31.362Z',
     type: 'video/mp4',
@@ -51,7 +51,7 @@ it('should not create a new video when payload is wrong', () => {
 
 it('should not create a new video when video_id is duplicated', () => {
   const obj = {
-    video_id: 120,
+    video_id: '120',
     name: 'salchicha',
     date_created: '2020-05-09T19:00:31.362Z',
     type: 'video/mp4',
@@ -70,7 +70,7 @@ it('should get all videos when gets /videos', () => {
   const expected = [
     {
       id: 1,
-      video_id: 120,
+      video_id: '120',
       name: 'salchicha',
       date_created: '2020-05-09T19:00:31.362Z',
       type: 'video/mp4',
@@ -80,7 +80,7 @@ it('should get all videos when gets /videos', () => {
     },
     {
       id: 2,
-      video_id: 112,
+      video_id: '112',
       name: 'doberman',
       date_created: '2020-05-09T19:00:31.362Z',
       type: 'video/mp4',
@@ -90,7 +90,7 @@ it('should get all videos when gets /videos', () => {
     },
     {
       id: 3,
-      video_id: 125,
+      video_id: '125',
       name: 'ovejero',
       date_created: '2020-05-09T19:00:31.362Z',
       type: 'video/mp4',
@@ -108,7 +108,7 @@ it('should get all videos when gets /videos', () => {
 it('should get specific video when gets /videos?id', done => {
   const expected = [
     {
-      video_id: 120,
+      video_id: '120',
       name: 'salchicha',
       date_created: '2020-05-09T19:00:31.362Z',
       type: 'video/mp4',

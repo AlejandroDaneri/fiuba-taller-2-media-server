@@ -5,7 +5,7 @@ exports.up = function (knex) {
       .primary()
       .unsigned()
     table
-      .integer('video_id')
+      .string('video_id', 500)
       .notNullable()
       .unique()
     table.string('name').notNullable()
