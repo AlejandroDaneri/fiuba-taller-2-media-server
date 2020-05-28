@@ -51,9 +51,12 @@ videos.get('/', function (req, res, next) {
     })
 })
 
-videos.delete('/:id', function (req, res, next) {
+videos.delete('/:id', async function (req, res, next) {
   queries
     .deleteVideo(req.params.id)
+    .then(filename => {
+      fb.deleteFile(filename)
+    })
     .then(r => {
       console.log(
         `DELETE /videos/${req.params.id}: Successfully deleted ${r} videos`

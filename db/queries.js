@@ -15,13 +15,15 @@ function addVideo (content) {
 }
 
 function getSingleVideo (videoID) {
-  return Videos().where('video_id', parseInt(videoID))
+  return Videos().where('video_id', videoID)
 }
 
 function deleteVideo (id) {
-  return Videos()
+  const deleted = Videos.select('name').where('video_id', id)
+  Videos()
     .where('video_id', id)
     .del()
+  return deleted
 }
 
 module.exports = {
