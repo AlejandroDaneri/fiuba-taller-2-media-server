@@ -39,11 +39,11 @@ videos.post('/', async function (req, res, next) {
 videos.get('/', function (req, res, next) {
   helper
     .getVideos(req.query.id)
-    .then(function ([message, result]) {
+    .then(([message, result]) => {
       console.info(message)
       res.status(httpStatus.OK).json({ videos: result })
     })
-    .catch(function (error) {
+    .catch(error => {
       console.error(error)
       res
         .status(httpStatus.INTERNAL_SERVER_ERROR)
@@ -60,7 +60,7 @@ videos.delete('/:id', function (req, res, next) {
       )
       res.status(httpStatus.OK).json(`Successfully deleted ${r} videos`)
     })
-    .catch(function (error) {
+    .catch(error => {
       console.error(error)
       res
         .status(httpStatus.INTERNAL_SERVER_ERROR)

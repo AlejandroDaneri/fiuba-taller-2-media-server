@@ -22,9 +22,7 @@ module.exports = {
   },
 
   empty (input) {
-    if (input === undefined || input === '') {
-      return true
-    }
+    return input === undefined || input === ''
   },
 
   isMalformed (payload) {
