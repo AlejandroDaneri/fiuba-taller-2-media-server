@@ -15,7 +15,7 @@ function addVideo (content) {
 }
 
 function getSingleVideo (videoID) {
-  return Videos().where('video_id', parseInt(videoID))
+  return Videos().where('video_id', videoID)
 }
 
 function deleteVideo (id) {
