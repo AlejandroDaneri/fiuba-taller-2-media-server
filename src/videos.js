@@ -51,4 +51,21 @@ videos.get('/', function (req, res, next) {
     })
 })
 
+videos.delete('/:id', function (req, res, next) {
+  queries
+    .deleteVideo(req.params.id)
+    .then(r => {
+      console.log(
+        `DELETE /videos/${req.params.id}: Successfully deleted ${r} videos`
+      )
+      res.status(httpStatus.OK).json(`Successfully deleted ${r} videos`)
+    })
+    .catch(function (error) {
+      console.error(error)
+      res
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Video cannot be deleted' })
+    })
+})
+
 module.exports = videos

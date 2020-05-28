@@ -32,7 +32,6 @@ it('should create a new video when payload is fine', () => {
       expect(resp).toMatchObject(obj)
     })
 })
-
 it('should not create a new video when payload is wrong', () => {
   const obj = {
     name: 'salchicha',
@@ -122,6 +121,26 @@ it('should get specific video when gets /videos?id', done => {
     expect(res.body).toMatchObject({ videos: expected })
     done()
   })
+})
+
+it('should delete video when payload is fine', done => {
+  const obj = {
+    video_id: '5000',
+    name: 'salchicha',
+    date_created: '2020-05-09T19:00:31.362Z',
+    type: 'video/mp4',
+    size: 3420480
+  }
+  request
+    .post('/videos')
+    .send(obj)
+    .then(() => {
+      request.delete('/videos/5000').then(res => {
+        expect(res.statusCode).toEqual(200)
+        expect(res.body).toStrictEqual('Successfully deleted 1 videos')
+        done()
+      })
+    })
 })
 
 afterAll(async function (done) {

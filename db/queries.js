@@ -18,8 +18,15 @@ function getSingleVideo (videoID) {
   return Videos().where('video_id', parseInt(videoID))
 }
 
+function deleteVideo (id) {
+  return Videos()
+    .where('video_id', id)
+    .del()
+}
+
 module.exports = {
   getAll: getAll,
   addVideo: addVideo,
-  getSingleVideo: getSingleVideo
+  getSingleVideo: getSingleVideo,
+  deleteVideo: deleteVideo
 }
