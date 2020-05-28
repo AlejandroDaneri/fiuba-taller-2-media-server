@@ -123,7 +123,7 @@ it('should get specific video when gets /videos?id', done => {
   })
 })
 
-it('should delete video when payload is fine', done => {
+it('should delete video when ID exists', done => {
   const obj = {
     video_id: '5000',
     name: 'salchicha',
@@ -141,6 +141,14 @@ it('should delete video when payload is fine', done => {
         done()
       })
     })
+})
+
+it('should not delete any video when ID not exists', done => {
+  request.delete('/videos/5000').then(res => {
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toStrictEqual('Successfully deleted 0 videos')
+    done()
+  })
 })
 
 afterAll(async function (done) {
