@@ -1,15 +1,20 @@
 import 'jest'
 
-var listVideoFiles = jest
-  .fn()
-  .mockImplementationOnce(() => Promise.resolve())
-  .mockImplementationOnce(() => Promise.reject(new Error()))
-
-const firebase = jest.mock('../firebase', () => {
-  return {
-    listVideoFiles: listVideoFiles,
-    constructor: true
+export default class Firebase {
+  constructor () {
+    console.debug('Mock Firebase: constructor was called')
   }
-})
 
-export default firebase
+  getLinks () {
+    console.debug('Mock Firebase: getLinks was called')
+    return Promise.resolve([
+      'https://trendy.com/url',
+      'https://trendy.com/thumb'
+    ]).catch()
+  }
+
+  deleteVideo () {
+    console.debug('Mock Firebase: deleteVideo was called')
+    return Promise.resolve(1).catch()
+  }
+}

@@ -40,6 +40,20 @@ class Firebase {
 
     return [video[0], img[0]]
   }
+
+  deleteVideo (filename) {
+    // Deletes the file from the bucket
+    return this.storage
+      .bucket(bucketName)
+      .file(filename)
+      .delete()
+      .then(() => {
+        console.log(`gs://${bucketName}/${filename} deleted.`)
+      })
+      .catch(() =>
+        console.error(`Error deleting gs://${bucketName}/${filename}`)
+      )
+  }
 }
 
 module.exports = Firebase

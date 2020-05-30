@@ -42,5 +42,4 @@ router.get('/status', function (req, res) {
       })
     })
 })
-
 module.exports = router

@@ -9,31 +9,27 @@ var Firebase = require('./firebase')
 var fb = new Firebase()
 videos.use(express.json())
 
-videos.post('/', async function (req, res, next) {
+videos.post('/', helper.validatePayload, helper.checkDuplicate, async function (
+  req,
+  res,
+  next
+) {
   var reqBody = req.body
-  const urls = await fb.getLinks(reqBody.name)
-  reqBody.url = urls[0]
-  reqBody.thumb = urls[1]
-
-  if (helper.isMalformed(reqBody)) {
-    console.warn('POST /videos: Malformed payload')
-    return res
-      .status(httpStatus.BAD_REQUEST)
-      .json({ error: 'Payload is malformed' })
-  }
-
-  try {
-    if (await helper.checkDuplicate(reqBody.video_id)) {
-      console.warn('POST /videos: canceled due duplicated video_id')
-      return res.status(httpStatus.CONFLICT).json({ error: 'Duplicated' })
-    }
-    await queries.addVideo(reqBody).catch(err => console.error(err))
-    console.info('POST /videos: New video uploaded')
-    res.status(httpStatus.CREATED).send(reqBody)
-  } catch (err) {
-    console.error(err)
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).json('error')
-  }
+  const [url, thumb] = await fb.getLinks(reqBody.name)
+  reqBody.url = url
+  reqBody.thumb = thumb
+  queries
+    .addVideo(reqBody)
+    .then(() => {
+      console.info('New video uploaded')
+      res.status(httpStatus.CREATED).send(reqBody)
+    })
+    .catch(
+      /* istanbul ignore next */ err => {
+        req.error = 'Video cannot be added'
+        next(err)
+      }
+    )
 })
 
 videos.get('/', function (req, res, next) {
@@ -43,29 +39,29 @@ videos.get('/', function (req, res, next) {
       console.info(message)
       res.status(httpStatus.OK).json({ videos: result })
     })
-    .catch(error => {
-      console.error(error)
-      res
-        .status(httpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: 'Video cannot be obtained' })
-    })
+    .catch(
+      /* istanbul ignore next */ err => {
+        req.error = 'Video cannot be obtained'
+        next(err)
+      }
+    )
 })
 
-videos.delete('/:id', function (req, res, next) {
+videos.delete('/:id', helper.lookupVideo, async function (req, res, next) {
+  const id = req.params.id
   queries
-    .deleteVideo(req.params.id)
-    .then(r => {
-      console.log(
-        `DELETE /videos/${req.params.id}: Successfully deleted ${r} videos`
-      )
-      res.status(httpStatus.OK).json(`Successfully deleted ${r} videos`)
+    .deleteVideo(id)
+    .then(({ name: filename }) => {
+      fb.deleteVideo(filename)
+      console.log(`Successfully deleted video ${id}`)
+      res.status(httpStatus.OK).json(`Successfully deleted video ${id}`)
     })
-    .catch(error => {
-      console.error(error)
-      res
-        .status(httpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: 'Video cannot be deleted' })
-    })
+    .catch(
+      /* istanbul ignore next */ err => {
+        req.error = 'Video cannot be deleted'
+        next(err)
+      }
+    )
 })
 
 module.exports = videos

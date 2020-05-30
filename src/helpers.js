@@ -1,4 +1,5 @@
 var queries = require('../db/queries')
+var httpStatus = require('http-status-codes')
 
 module.exports = {
   async getVideos (id) {
@@ -14,24 +15,54 @@ module.exports = {
     return [message, result]
   },
 
-  async checkDuplicate (id) {
-    return await queries
-      .getSingleVideo(id)
-      .then(result => result.length > 0)
-      .catch(err => console.error(err))
+  validatePayload (req, res, next) {
+    function empty (input) {
+      return input === undefined || input === ''
+    }
+    const payload = req.body
+    if (
+      empty(payload.video_id) ||
+      empty(payload.name) ||
+      empty(payload.date_created) ||
+      empty(payload.type) ||
+      empty(payload.size)
+    ) {
+      console.warn('Malformed payload')
+      return res
+        .status(httpStatus.BAD_REQUEST)
+        .json({ error: 'Payload is malformed' })
+    } else next()
   },
 
-  empty (input) {
-    return input === undefined || input === ''
+  lookupVideo (req, res, next) {
+    const videoID = req.params.id
+    queries.getSingleVideo(videoID, function (result, err) {
+      /* istanbul ignore if */
+      if (err) {
+        req.error = 'An error has occurred'
+        next(err)
+      } else if (result.length === 0) {
+        res.statusCode = httpStatus.NOT_FOUND
+        console.warn('Video', videoID, 'not found')
+        return res.json({ error: 'Video not found' })
+      }
+      next()
+    })
   },
 
-  isMalformed (payload) {
-    return (
-      this.empty(payload.video_id) ||
-      this.empty(payload.name) ||
-      this.empty(payload.date_created) ||
-      this.empty(payload.type) ||
-      this.empty(payload.size)
-    )
+  checkDuplicate (req, res, next) {
+    const videoID = req.body.video_id
+    queries.getSingleVideo(videoID, function (result, err) {
+      /* istanbul ignore if */
+      if (err) {
+        req.error = 'An error has occurred'
+        next(err)
+      } else if (result.length > 0) {
+        res.statusCode = httpStatus.CONFLICT
+        console.warn('Video', videoID, 'already exists')
+        return res.json({ error: 'Duplicated' })
+      }
+      next()
+    })
   }
 }
