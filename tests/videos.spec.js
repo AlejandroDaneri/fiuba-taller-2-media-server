@@ -1,5 +1,5 @@
 import 'jest'
-
+// TODO: revisar que no se llama al mock de firebase aunque lo importe
 process.env.NODE_ENV = 'test'
 
 const app = require('../app')
@@ -15,7 +15,7 @@ beforeEach(() =>
     .then(() => knex.seed.run())
 )
 
-it('should create a new video when payload is fine', () => {
+it('should create a new video when payload is fine', done => {
   const obj = {
     video_id: '1234',
     name: 'salchicha',
@@ -30,9 +30,10 @@ it('should create a new video when payload is fine', () => {
       expect(res.statusCode).toEqual(201)
       var resp = res.body
       expect(resp).toMatchObject(obj)
+      done()
     })
 })
-it('should not create a new video when payload is wrong', () => {
+it('should not create a new video when payload is wrong', done => {
   const obj = {
     name: 'salchicha',
     date_created: '2020-05-09T19:00:31.362Z',
@@ -45,10 +46,11 @@ it('should not create a new video when payload is wrong', () => {
     .then(res => {
       expect(res.statusCode).toEqual(400)
       expect(res.body).toMatchObject({ error: 'Payload is malformed' })
+      done()
     })
 })
 
-it('should not create a new video when video_id is duplicated', () => {
+it('should not create a new video when video_id is duplicated', done => {
   const obj = {
     video_id: '120',
     name: 'salchicha',
@@ -62,6 +64,7 @@ it('should not create a new video when video_id is duplicated', () => {
     .then(res => {
       expect(res.statusCode).toEqual(409)
       expect(res.body).toMatchObject({ error: 'Duplicated' })
+      done()
     })
 })
 
@@ -124,6 +127,7 @@ it('should get specific video when gets /videos?id', done => {
 })
 
 it('should delete video when ID exists', done => {
+  // revisar done
   const obj = {
     video_id: '5000',
     name: 'salchicha',
@@ -137,16 +141,17 @@ it('should delete video when ID exists', done => {
     .then(() => {
       request.delete('/videos/5000').then(res => {
         expect(res.statusCode).toEqual(200)
-        expect(res.body).toStrictEqual('Successfully deleted 1 videos')
+        expect(res.body).toStrictEqual('Successfully deleted video 5000')
         done()
       })
     })
 })
 
 it('should not delete any video when ID not exists', done => {
-  request.delete('/videos/5000').then(res => {
-    expect(res.statusCode).toEqual(200)
-    expect(res.body).toStrictEqual('Successfully deleted 0 videos')
+  // revisar done
+  request.delete('/videos/32154').then(res => {
+    expect(res.statusCode).toEqual(404)
+    expect(res.body).toMatchObject({ error: 'Video not found' })
     done()
   })
 })

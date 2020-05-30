@@ -41,14 +41,18 @@ class Firebase {
     return [video[0], img[0]]
   }
 
-  async deleteFile (filename) {
+  deleteVideo (filename) {
     // Deletes the file from the bucket
-    await this.storage
+    return this.storage
       .bucket(bucketName)
       .file(filename)
       .delete()
-
-    console.log(`gs://${bucketName}/${filename} deleted.`)
+      .then(() => {
+        console.log(`gs://${bucketName}/${filename} deleted.`)
+      })
+      .catch(() =>
+        console.error(`Error deleting gs://${bucketName}/${filename}`)
+      )
   }
 }
 
