@@ -18,14 +18,18 @@ videos.post('/', helper.validatePayload, helper.checkDuplicate, async function (
   const [url, thumb] = await fb.getLinks(reqBody.name)
   reqBody.url = url
   reqBody.thumb = thumb
-  try {
-    await queries.addVideo(reqBody).catch(err => console.error(err))
-    console.info('New video uploaded')
-    res.status(httpStatus.CREATED).send(reqBody)
-  } catch (err) {
-    console.error(err)
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).json('error')
-  }
+  queries
+    .addVideo(reqBody)
+    .then(() => {
+      console.info('New video uploaded')
+      res.status(httpStatus.CREATED).send(reqBody)
+    })
+    .catch(
+      /* istanbul ignore next */ err => {
+        req.error = 'Video cannot be added'
+        next(err)
+      }
+    )
 })
 
 videos.get('/', function (req, res, next) {
@@ -35,10 +39,12 @@ videos.get('/', function (req, res, next) {
       console.info(message)
       res.status(httpStatus.OK).json({ videos: result })
     })
-    .catch(err => {
-      req.error = 'Video cannot be obtained'
-      next(err)
-    })
+    .catch(
+      /* istanbul ignore next */ err => {
+        req.error = 'Video cannot be obtained'
+        next(err)
+      }
+    )
 })
 
 videos.delete('/:id', helper.lookupVideo, async function (req, res, next) {

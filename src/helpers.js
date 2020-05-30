@@ -37,6 +37,7 @@ module.exports = {
   lookupVideo (req, res, next) {
     const videoID = req.params.id
     queries.getSingleVideo(videoID, function (result, err) {
+      /* istanbul ignore if */
       if (err) {
         req.error = 'An error has occurred'
         next(err)
@@ -52,6 +53,7 @@ module.exports = {
   checkDuplicate (req, res, next) {
     const videoID = req.body.video_id
     queries.getSingleVideo(videoID, function (result, err) {
+      /* istanbul ignore if */
       if (err) {
         req.error = 'An error has occurred'
         next(err)
