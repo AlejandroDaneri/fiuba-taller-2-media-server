@@ -9,6 +9,9 @@ const app = require('../app')
 const supertest = require('supertest')
 const request = supertest(app)
 const knex = require('../db/knex')
+const constants = require('../src/constants')
+const httpStatus = require('http-status-codes')
+
 beforeEach(() =>
   knex.migrate
     .forceFreeMigrationsLock()
@@ -18,12 +21,12 @@ beforeEach(() =>
 )
 
 it('should returns database online', () => {
-  request.get('/status').then(res => {
-    expect(res.statusCode).toEqual(200)
+  request.get(constants.PREFIX_URL + '/status').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.OK)
     expect(res.body).toMatchObject({
       code: 0,
       message: 'media-server',
-      'data:': {
+      data: {
         server_status: 'online',
         database_status: 'online'
       }
@@ -32,12 +35,12 @@ it('should returns database online', () => {
 })
 
 it('should returns database offline', () => {
-  request.get('/status').then(res => {
-    expect(res.statusCode).toEqual(200)
+  request.get(constants.PREFIX_URL + '/status').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.OK)
     expect(res.body).toMatchObject({
       code: 0,
       message: 'media-server',
-      'data:': {
+      data: {
         server_status: 'online',
         database_status: 'offline'
       }
@@ -46,15 +49,15 @@ it('should returns database offline', () => {
 })
 
 it('should gets the root endpoint successfully', () => {
-  request.get('/').then(res => {
-    expect(res.status).toBe(200)
+  request.get(constants.PREFIX_URL + '/').then(res => {
+    expect(res.status).toBe(httpStatus.OK)
     expect(res.text).toBe('Hello World!')
   })
 })
 
 it('should gets the ping endpoint successfully', () => {
-  request.get('/ping').then(res => {
-    expect(res.status).toBe(200)
+  request.get(constants.PREFIX_URL + '/ping').then(res => {
+    expect(res.status).toBe(httpStatus.OK)
     expect(res.text).toBe('Ping received!')
   })
 })

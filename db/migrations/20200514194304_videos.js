@@ -9,6 +9,7 @@ exports.up = function (knex) {
       .notNullable()
       .unique()
     table.string('name').notNullable()
+    table.string('user_id').notNullable()
     table.string('date_created').notNullable()
     table.string('type').notNullable()
     table.integer('size').notNullable()

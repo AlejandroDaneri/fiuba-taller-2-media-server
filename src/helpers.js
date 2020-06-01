@@ -1,5 +1,6 @@
 var queries = require('../db/queries')
 var httpStatus = require('http-status-codes')
+var errors = require('./errors')
 
 module.exports = {
   async getVideos (id) {
@@ -25,12 +26,13 @@ module.exports = {
       empty(payload.name) ||
       empty(payload.date_created) ||
       empty(payload.type) ||
+      empty(payload.user_id) ||
       empty(payload.size)
     ) {
       console.warn('Malformed payload')
       return res
         .status(httpStatus.BAD_REQUEST)
-        .json({ error: 'Payload is malformed' })
+        .json(errors.response(-1, 'Payload is malformed'))
     } else next()
   },
 
@@ -39,13 +41,14 @@ module.exports = {
     queries.getSingleVideo(videoID, function (result, err) {
       /* istanbul ignore if */
       if (err) {
-        req.error = 'An error has occurred'
+        req.error = errors.response(-1, 'Unexpected error')
         next(err)
       } else if (result.length === 0) {
+        console.warn(`Video ${videoID} already not found`)
         res.statusCode = httpStatus.NOT_FOUND
-        console.warn('Video', videoID, 'not found')
-        return res.json({ error: 'Video not found' })
+        return res.json(errors.response(-1, `Video ${videoID} not found`))
       }
+      req.video = result[0]
       next()
     })
   },
@@ -55,12 +58,12 @@ module.exports = {
     queries.getSingleVideo(videoID, function (result, err) {
       /* istanbul ignore if */
       if (err) {
-        req.error = 'An error has occurred'
+        req.error = errors.response(-1, 'Unexpected error')
         next(err)
       } else if (result.length > 0) {
+        console.warn(`Video ${videoID} already exists`)
         res.statusCode = httpStatus.CONFLICT
-        console.warn('Video', videoID, 'already exists')
-        return res.json({ error: 'Duplicated' })
+        return res.json(errors.response(-1, `Video ${videoID} already exists`))
       }
       next()
     })
