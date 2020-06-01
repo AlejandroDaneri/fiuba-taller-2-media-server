@@ -6,6 +6,8 @@ const app = require('../app')
 const supertest = require('supertest')
 const request = supertest(app)
 const knex = require('../db/knex')
+const constants = require('../src/constants')
+const httpStatus = require('http-status-codes')
 
 beforeEach(() =>
   knex.migrate
@@ -24,10 +26,10 @@ it('should create a new video when payload is fine', done => {
     size: 3420480
   }
   request
-    .post('/videos')
+    .post(constants.PREFIX_URL + '/videos')
     .send(obj)
     .then(res => {
-      expect(res.statusCode).toEqual(201)
+      expect(res.statusCode).toEqual(httpStatus.CREATED)
       var resp = res.body
       expect(resp).toMatchObject(obj)
       done()
@@ -41,10 +43,10 @@ it('should not create a new video when payload is wrong', done => {
     size: 3420480
   }
   request
-    .post('/videos')
+    .post(constants.PREFIX_URL + '/videos')
     .send(obj)
     .then(res => {
-      expect(res.statusCode).toEqual(400)
+      expect(res.statusCode).toEqual(httpStatus.BAD_REQUEST)
       expect(res.body).toMatchObject({ error: 'Payload is malformed' })
       done()
     })
@@ -59,10 +61,10 @@ it('should not create a new video when video_id is duplicated', done => {
     size: 3420480
   }
   request
-    .post('/videos')
+    .post(constants.PREFIX_URL + '/videos')
     .send(obj)
     .then(res => {
-      expect(res.statusCode).toEqual(409)
+      expect(res.statusCode).toEqual(httpStatus.CONFLICT)
       expect(res.body).toMatchObject({ error: 'Duplicated' })
       done()
     })
@@ -101,8 +103,8 @@ it('should get all videos when gets /videos', () => {
       thumb: 'http://alg3o.com'
     }
   ]
-  request.get('/videos').then(res => {
-    expect(res.statusCode).toEqual(200)
+  request.get(constants.PREFIX_URL + '/videos').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.OK)
     expect(res.body).toStrictEqual({ videos: expected })
   })
 })
@@ -117,16 +119,16 @@ it('should get specific video when gets /videos/id', done => {
     url: 'http://algo.com',
     thumb: 'http://algo.com'
   }
-  request.get('/videos/120').then(res => {
-    expect(res.statusCode).toEqual(200)
+  request.get(constants.PREFIX_URL + '/videos/120').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.OK)
     expect(res.body).toMatchObject(expected)
     done()
   })
 })
 
 it('should return not found when gets /videos/id when video not exists', done => {
-  request.get('/videos/12320').then(res => {
-    expect(res.statusCode).toEqual(404)
+  request.get(constants.PREFIX_URL + '/videos/12320').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
     expect(res.body).toMatchObject({ error: 'Video not found' })
     done()
   })
@@ -144,8 +146,8 @@ it('should get specific video when gets /videos?id', done => {
       thumb: 'http://algo.com'
     }
   ]
-  request.get('/videos?id=120').then(res => {
-    expect(res.statusCode).toEqual(200)
+  request.get(constants.PREFIX_URL + '/videos?id=120').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.OK)
     expect(res.body).toMatchObject({ videos: expected })
     done()
   })
@@ -161,11 +163,11 @@ it('should delete video when ID exists', done => {
     size: 3420480
   }
   request
-    .post('/videos')
+    .post(constants.PREFIX_URL + '/videos')
     .send(obj)
     .then(() => {
-      request.delete('/videos/5000').then(res => {
-        expect(res.statusCode).toEqual(200)
+      request.delete(constants.PREFIX_URL + '/videos/5000').then(res => {
+        expect(res.statusCode).toEqual(httpStatus.OK)
         expect(res.body).toStrictEqual('Successfully deleted video 5000')
         done()
       })
@@ -174,8 +176,8 @@ it('should delete video when ID exists', done => {
 
 it('should not delete any video when ID not exists', done => {
   // revisar done
-  request.delete('/videos/32154').then(res => {
-    expect(res.statusCode).toEqual(404)
+  request.delete(constants.PREFIX_URL + '/videos/32154').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
     expect(res.body).toMatchObject({ error: 'Video not found' })
     done()
   })
