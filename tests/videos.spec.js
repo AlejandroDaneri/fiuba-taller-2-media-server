@@ -24,7 +24,8 @@ it('should create a new video when payload is fine', done => {
     name: 'salchicha',
     date_created: '2020-05-09T19:00:31.362Z',
     type: 'video/mp4',
-    size: 3420480
+    size: 3420480,
+    user_id: '32a1sd5asd654'
   }
   request
     .post(constants.PREFIX_URL + '/videos')
@@ -61,7 +62,8 @@ it('should not create a new video when video_id is duplicated', done => {
     name: 'salchicha',
     date_created: '2020-05-09T19:00:31.362Z',
     type: 'video/mp4',
-    size: 3420480
+    size: 3420480,
+    user_id: '32a1sd5asd654'
   }
   request
     .post(constants.PREFIX_URL + '/videos')
@@ -85,7 +87,8 @@ it('should get all videos when gets /videos', () => {
       type: 'video/mp4',
       size: 3420480,
       url: 'http://algo.com',
-      thumb: 'http://algo.com'
+      thumb: 'http://algo.com',
+      user_id: '32a1sd5asd654'
     },
     {
       id: 2,
@@ -95,7 +98,8 @@ it('should get all videos when gets /videos', () => {
       type: 'video/mp4',
       size: 3420480,
       url: 'http://algo2.com',
-      thumb: 'http://algo3.com'
+      thumb: 'http://algo3.com',
+      user_id: '32a1sd5asd654'
     },
     {
       id: 3,
@@ -105,7 +109,8 @@ it('should get all videos when gets /videos', () => {
       type: 'video/mp4',
       size: 3420480,
       url: 'http://algo23.com',
-      thumb: 'http://alg3o.com'
+      thumb: 'http://alg3o.com',
+      user_id: '32a1sd5asd654'
     }
   ]
   request.get(constants.PREFIX_URL + '/videos').then(res => {
@@ -122,7 +127,8 @@ it('should get specific video when gets /videos/id', done => {
     type: 'video/mp4',
     size: 3420480,
     url: 'http://algo.com',
-    thumb: 'http://algo.com'
+    thumb: 'http://algo.com',
+    user_id: '32a1sd5asd654'
   }
   request.get(constants.PREFIX_URL + '/videos/120').then(res => {
     expect(res.statusCode).toEqual(httpStatus.OK)
@@ -150,7 +156,8 @@ it('should get specific video when gets /videos?id', done => {
       type: 'video/mp4',
       size: 3420480,
       url: 'http://algo.com',
-      thumb: 'http://algo.com'
+      thumb: 'http://algo.com',
+      user_id: '32a1sd5asd654'
     }
   ]
   request.get(constants.PREFIX_URL + '/videos?id=120').then(res => {
@@ -167,7 +174,8 @@ it('should delete video when ID exists', done => {
     name: 'salchicha',
     date_created: '2020-05-09T19:00:31.362Z',
     type: 'video/mp4',
-    size: 3420480
+    size: 3420480,
+    user_id: '32a1sd5asd654'
   }
   request
     .post(constants.PREFIX_URL + '/videos')

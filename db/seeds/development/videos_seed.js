@@ -9,7 +9,8 @@ exports.seed = function (knex, Promise) {
         type: 'video/mp4',
         size: 3420480,
         url: 'http://algo.com',
-        thumb: 'http://algo.com'
+        thumb: 'http://algo.com',
+        user_id: '32a1sd5asd654'
       })
     })
     .then(function () {
@@ -20,7 +21,8 @@ exports.seed = function (knex, Promise) {
         type: 'video/mp4',
         size: 3420480,
         url: 'http://algo2.com',
-        thumb: 'http://algo3.com'
+        thumb: 'http://algo3.com',
+        user_id: '32a1sd5asd654'
       })
     })
     .then(function () {
@@ -31,7 +33,8 @@ exports.seed = function (knex, Promise) {
         type: 'video/mp4',
         size: 3420480,
         url: 'http://algo23.com',
-        thumb: 'http://alg3o.com'
+        thumb: 'http://alg3o.com',
+        user_id: '32a1sd5asd654'
       })
     })
 }

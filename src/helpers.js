@@ -26,6 +26,7 @@ module.exports = {
       empty(payload.name) ||
       empty(payload.date_created) ||
       empty(payload.type) ||
+      empty(payload.user_id) ||
       empty(payload.size)
     ) {
       console.warn('Malformed payload')
