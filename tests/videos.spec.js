@@ -107,6 +107,31 @@ it('should get all videos when gets /videos', () => {
   })
 })
 
+it('should get specific video when gets /videos/id', done => {
+  const expected = {
+    video_id: '120',
+    name: 'salchicha',
+    date_created: '2020-05-09T19:00:31.362Z',
+    type: 'video/mp4',
+    size: 3420480,
+    url: 'http://algo.com',
+    thumb: 'http://algo.com'
+  }
+  request.get('/videos/120').then(res => {
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toMatchObject(expected)
+    done()
+  })
+})
+
+it('should return not found when gets /videos/id when video not exists', done => {
+  request.get('/videos/12320').then(res => {
+    expect(res.statusCode).toEqual(404)
+    expect(res.body).toMatchObject({ error: 'Video not found' })
+    done()
+  })
+})
+
 it('should get specific video when gets /videos?id', done => {
   const expected = [
     {

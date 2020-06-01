@@ -47,6 +47,10 @@ videos.get('/', function (req, res, next) {
     )
 })
 
+videos.get('/:id', helper.lookupVideo, function (req, res, next) {
+  res.json(req.video)
+})
+
 videos.delete('/:id', helper.lookupVideo, async function (req, res, next) {
   const id = req.params.id
   queries

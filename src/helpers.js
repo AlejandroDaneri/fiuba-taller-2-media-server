@@ -46,6 +46,7 @@ module.exports = {
         console.warn('Video', videoID, 'not found')
         return res.json({ error: 'Video not found' })
       }
+      req.video = result[0]
       next()
     })
   },
