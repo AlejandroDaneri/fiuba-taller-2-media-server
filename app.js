@@ -19,7 +19,7 @@ app.use(function (req, res, next) {
 function errorHandler (err, req, res, next) {
   console.error(err)
   res.status(500)
-  res.json({ error: req.error })
+  res.json(req.error)
 }
 
 app.use(express.json())

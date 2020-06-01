@@ -8,6 +8,7 @@ const request = supertest(app)
 const knex = require('../db/knex')
 const constants = require('../src/constants')
 const httpStatus = require('http-status-codes')
+const errors = require('../src/errors')
 
 beforeEach(() =>
   knex.migrate
@@ -47,7 +48,9 @@ it('should not create a new video when payload is wrong', done => {
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.BAD_REQUEST)
-      expect(res.body).toMatchObject({ error: 'Payload is malformed' })
+      expect(res.body).toMatchObject(
+        errors.response(-1, 'Payload is malformed')
+      )
       done()
     })
 })
@@ -65,7 +68,9 @@ it('should not create a new video when video_id is duplicated', done => {
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.CONFLICT)
-      expect(res.body).toMatchObject({ error: 'Duplicated' })
+      expect(res.body).toMatchObject(
+        errors.response(-1, `Video ${obj.video_id} already exists`)
+      )
       done()
     })
 })
@@ -129,7 +134,9 @@ it('should get specific video when gets /videos/id', done => {
 it('should return not found when gets /videos/id when video not exists', done => {
   request.get(constants.PREFIX_URL + '/videos/12320').then(res => {
     expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
-    expect(res.body).toMatchObject({ error: 'Video not found' })
+    expect(res.body).toMatchObject(
+      errors.response(-1, 'Video ' + 12320 + ' not found')
+    )
     done()
   })
 })
@@ -154,7 +161,7 @@ it('should get specific video when gets /videos?id', done => {
 })
 
 it('should delete video when ID exists', done => {
-  // revisar done
+  // TODO: revisar done
   const obj = {
     video_id: '5000',
     name: 'salchicha',
@@ -175,10 +182,12 @@ it('should delete video when ID exists', done => {
 })
 
 it('should not delete any video when ID not exists', done => {
-  // revisar done
+  // TODO: revisar done
   request.delete(constants.PREFIX_URL + '/videos/32154').then(res => {
     expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
-    expect(res.body).toMatchObject({ error: 'Video not found' })
+    expect(res.body).toMatchObject(
+      errors.response(-1, 'Video ' + 32154 + ' not found')
+    )
     done()
   })
 })

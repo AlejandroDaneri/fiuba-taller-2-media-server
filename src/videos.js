@@ -4,6 +4,7 @@ var videos = express.Router()
 var httpStatus = require('http-status-codes')
 var queries = require('../db/queries')
 var helper = require('./helpers')
+var errors = require('./errors')
 
 var Firebase = require('./firebase')
 var fb = new Firebase()
@@ -26,7 +27,7 @@ videos.post('/', helper.validatePayload, helper.checkDuplicate, async function (
     })
     .catch(
       /* istanbul ignore next */ err => {
-        req.error = 'Video cannot be added'
+        req.error = errors.response(-1, 'Video cannot be added')
         next(err)
       }
     )
@@ -41,7 +42,7 @@ videos.get('/', function (req, res, next) {
     })
     .catch(
       /* istanbul ignore next */ err => {
-        req.error = 'Video cannot be obtained'
+        req.error = errors.response(-1, 'Video cannot be obtained')
         next(err)
       }
     )
@@ -62,7 +63,7 @@ videos.delete('/:id', helper.lookupVideo, async function (req, res, next) {
     })
     .catch(
       /* istanbul ignore next */ err => {
-        req.error = 'Video cannot be deleted'
+        req.error = errors.response(-1, 'Video cannot be deleted')
         next(err)
       }
     )

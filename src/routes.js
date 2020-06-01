@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var videos = require('./videos')
+const errors = require('./errors')
 
 var utils = require('./utils')
 
@@ -21,25 +22,21 @@ router.get('/status', function (req, res) {
     .checkPostgres()
     .then(() => {
       console.info('GET /status: postgres connected')
-      res.json({
-        code: 0,
-        message: 'media-server',
-        'data:': {
+      res.json(
+        errors.response(0, 'media-server', {
           server_status: 'online',
           database_status: 'online'
-        }
-      })
+        })
+      )
     })
     .catch(() => {
       console.error('GET /status: postgres connection error')
-      res.json({
-        code: 0,
-        message: 'media-server',
-        'data:': {
+      res.json(
+        errors.response(0, 'media-server', {
           server_status: 'online',
           database_status: 'offline'
-        }
-      })
+        })
+      )
     })
 })
 module.exports = router

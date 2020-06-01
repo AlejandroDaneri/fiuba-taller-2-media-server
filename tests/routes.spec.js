@@ -26,7 +26,7 @@ it('should returns database online', () => {
     expect(res.body).toMatchObject({
       code: 0,
       message: 'media-server',
-      'data:': {
+      data: {
         server_status: 'online',
         database_status: 'online'
       }
@@ -40,7 +40,7 @@ it('should returns database offline', () => {
     expect(res.body).toMatchObject({
       code: 0,
       message: 'media-server',
-      'data:': {
+      data: {
         server_status: 'online',
         database_status: 'offline'
       }
