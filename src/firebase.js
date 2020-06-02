@@ -27,15 +27,15 @@ class Firebase {
     Firebase.instance = this
   }
 
-  async getLinks (fileName) {
+  async getLinks (filename) {
     const video = await this.storage
       .bucket(bucketName)
-      .file(`${baseVideosUrl}${fileName}.mp4`)
+      .file(`${baseVideosUrl}${filename}.mp4`)
       .getSignedUrl(config)
 
     const img = await this.storage
       .bucket(bucketName)
-      .file(`${baseVideosUrl}thumb_${fileName}.jpg`)
+      .file(`${baseVideosUrl}thumb_${filename}.jpg`)
       .getSignedUrl(config)
 
     return [video[0], img[0]]
@@ -45,7 +45,7 @@ class Firebase {
     // Deletes the file from the bucket
     return this.storage
       .bucket(bucketName)
-      .file(filename)
+      .file(`${baseVideosUrl}${filename}.mp4`)
       .delete()
       .then(() => {
         console.log(`gs://${bucketName}/${filename} deleted.`)
