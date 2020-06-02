@@ -48,7 +48,7 @@ class Firebase {
       .file(`${baseVideosUrl}${filename}.mp4`)
       .delete()
       .then(() => {
-        console.log(`gs://${bucketName}/${filename} deleted.`)
+        console.log(`gs://${bucketName}/${baseVideosUrl}${filename} deleted.`)
       })
       .catch(() =>
         console.error(`Error deleting gs://${bucketName}/${filename}`)
