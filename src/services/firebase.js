@@ -1,8 +1,10 @@
 var admin = require('firebase-admin')
 const logger = require('../config/logger')
+const constants = require('../constants/constants')
 
 const bucketName = 'chotuve-grupo8.appspot.com'
 const baseVideosUrl = 'uploads/videos/test/'
+
 const config = {
   action: 'read',
   expires: Date.now() + 1000 * 60 * 60 * 3000
@@ -31,24 +33,24 @@ class Firebase {
   async getLinks (filename) {
     const video = await this.storage
       .bucket(bucketName)
-      .file(`${baseVideosUrl}${filename}.mp4`)
+      .file(`${baseVideosUrl}${filename}`)
       .getSignedUrl(config)
       .catch(() =>
-        logger.error(
-          `Error creating link for gs://${bucketName}/${filename}.mp4`
-        )
+        logger.error(`Error creating link for gs://${bucketName}/${filename}`)
       )
+    filename = filename.replace(constants.FILE_EXT_REGEXP, '')
 
     const img = await this.storage
       .bucket(bucketName)
-      .file(`${baseVideosUrl}thumb_${filename}.jpg`)
+      .file(
+        `${baseVideosUrl}${constants.THUMB_PREFIX}${filename}${constants.THUMB_FILE_EXT}`
+      )
       .getSignedUrl(config)
       .catch(() =>
         logger.error(
-          `Error creating links for gs://${bucketName}/${filename}.jpg`
+          `Error creating links for gs://${bucketName}/${filename}${constants.THUMB_FILE_EXT}`
         )
       )
-
     return [video[0], img[0]]
   }
 
@@ -56,13 +58,15 @@ class Firebase {
     // Deletes the file from the bucket
     return this.storage
       .bucket(bucketName)
-      .file(`${baseVideosUrl}${filename}.mp4`)
+      .file(`${baseVideosUrl}${filename}`)
       .delete()
       .then(() => {
         logger.log(`gs://${bucketName}/${baseVideosUrl}${filename} deleted.`)
       })
       .catch(() =>
-        logger.error(`Error deleting gs://${bucketName}/${filename}`)
+        logger.error(
+          `Error deleting gs://${bucketName}/${baseVideosUrl}${filename}`
+        )
       )
   }
 }
