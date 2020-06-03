@@ -1,4 +1,5 @@
 var admin = require('firebase-admin')
+const logger = require('../config/logger')
 
 const bucketName = 'chotuve-grupo8.appspot.com'
 const baseVideosUrl = 'uploads/videos/test/'
@@ -32,11 +33,21 @@ class Firebase {
       .bucket(bucketName)
       .file(`${baseVideosUrl}${filename}.mp4`)
       .getSignedUrl(config)
+      .catch(() =>
+        logger.error(
+          `Error creating link for gs://${bucketName}/${filename}.mp4`
+        )
+      )
 
     const img = await this.storage
       .bucket(bucketName)
       .file(`${baseVideosUrl}thumb_${filename}.jpg`)
       .getSignedUrl(config)
+      .catch(() =>
+        logger.error(
+          `Error creating links for gs://${bucketName}/${filename}.jpg`
+        )
+      )
 
     return [video[0], img[0]]
   }
@@ -48,10 +59,10 @@ class Firebase {
       .file(`${baseVideosUrl}${filename}.mp4`)
       .delete()
       .then(() => {
-        console.log(`gs://${bucketName}/${baseVideosUrl}${filename} deleted.`)
+        logger.log(`gs://${bucketName}/${baseVideosUrl}${filename} deleted.`)
       })
       .catch(() =>
-        console.error(`Error deleting gs://${bucketName}/${filename}`)
+        logger.error(`Error deleting gs://${bucketName}/${filename}`)
       )
   }
 }

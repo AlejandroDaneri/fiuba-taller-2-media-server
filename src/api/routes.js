@@ -1,9 +1,10 @@
 var express = require('express')
 var router = express.Router()
 var videos = require('./videos')
-const errors = require('./errors')
+const errors = require('../errors/errors')
+const logger = require('../config/logger')
 
-var utils = require('./utils')
+var utils = require('../helpers/utils')
 
 router.use('/videos', videos)
 router.use(express.json())
@@ -14,14 +15,14 @@ router.get('/', function (req, res, next) {
 
 router.get('/ping', function (req, res, next) {
   res.send('Ping received!')
-  console.info('GET /ping : New ping from', req.ip)
+  logger.info(`GET /ping : New ping from ${req.ip}`)
 })
 
 router.get('/status', function (req, res) {
   utils
     .checkPostgres()
     .then(() => {
-      console.info('GET /status: postgres connected')
+      logger.info('GET /status: postgres connected')
       res.json(
         errors.response(0, 'media-server', {
           server_status: 'online',
@@ -30,7 +31,7 @@ router.get('/status', function (req, res) {
       )
     })
     .catch(() => {
-      console.error('GET /status: postgres connection error')
+      logger.error('GET /status: postgres connection error')
       res.json(
         errors.response(0, 'media-server', {
           server_status: 'online',

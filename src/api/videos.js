@@ -2,11 +2,12 @@ var express = require('express')
 var videos = express.Router()
 
 var httpStatus = require('http-status-codes')
-var queries = require('../db/queries')
-var helper = require('./helpers')
-var errors = require('./errors')
+var queries = require('../../db/queries')
+var helper = require('../helpers/helpers')
+var errors = require('../errors/errors')
+const logger = require('../config/logger')
 
-var Firebase = require('./firebase')
+var Firebase = require('../services/firebase')
 var fb = new Firebase()
 videos.use(express.json())
 
@@ -22,7 +23,9 @@ videos.post('/', helper.validatePayload, helper.checkDuplicate, async function (
   queries
     .addVideo(reqBody)
     .then(() => {
-      console.info('New video uploaded')
+      logger.info(
+        `New video uploaded - ID:${reqBody.video_id} USER:${reqBody.user_id}`
+      )
       res.status(httpStatus.CREATED).send(reqBody)
     })
     .catch(
@@ -37,7 +40,7 @@ videos.get('/', function (req, res, next) {
   helper
     .getVideos(req.query.id)
     .then(([message, result]) => {
-      console.info(message)
+      logger.info(message)
       res.status(httpStatus.OK).json({ videos: result })
     })
     .catch(
@@ -58,7 +61,7 @@ videos.delete('/:id', helper.lookupVideo, async function (req, res, next) {
     .deleteVideo(id)
     .then(({ name: filename }) => {
       fb.deleteVideo(filename)
-      console.log(`Successfully deleted video ${id}`)
+      logger.log(`Successfully deleted video ${id}`)
       res.status(httpStatus.OK).json(`Successfully deleted video ${id}`)
     })
     .catch(

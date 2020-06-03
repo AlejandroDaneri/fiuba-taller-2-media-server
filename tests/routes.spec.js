@@ -9,7 +9,7 @@ const app = require('../app')
 const supertest = require('supertest')
 const request = supertest(app)
 const knex = require('../db/knex')
-const constants = require('../src/constants')
+const constants = require('../src/constants/constants')
 const httpStatus = require('http-status-codes')
 
 beforeEach(() =>
