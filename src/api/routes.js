@@ -1,12 +1,14 @@
 var express = require('express')
 var router = express.Router()
 var videos = require('./videos')
+var pictures = require('./pictures')
 const errors = require('../errors/errors')
 const logger = require('../config/logger')
 
 var utils = require('../helpers/utils')
 
 router.use('/videos', videos)
+router.use('/pictures', pictures)
 router.use(express.json())
 
 router.get('/', function (req, res, next) {
