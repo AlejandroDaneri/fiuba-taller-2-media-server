@@ -21,7 +21,7 @@ beforeEach(() =>
 it('should create a new avatar when payload is fine', done => {
   const obj = {
     name: 'pic1.jpg',
-    user_id: '32a1sd5asd654'
+    user_id: '231asd5ww1'
   }
   request
     .post(constants.PREFIX_URL + '/pictures')
@@ -51,6 +51,22 @@ it('should create a new avatar when payload is wrong', done => {
     })
 })
 
+it('should not create a new avatar when user_id is duplicated', done => {
+  const obj = {
+    name: 'error.jpg',
+    user_id: '32a1sd5asd654'
+  }
+  request
+    .post(constants.PREFIX_URL + '/pictures')
+    .send(obj)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.CONFLICT)
+      expect(res.body).toMatchObject(
+        errors.response(-1, `Picture of ${obj.user_id} already exists`)
+      )
+      done()
+    })
+})
 afterAll(async function (done) {
   await knex.destroy()
   app.close(done)
