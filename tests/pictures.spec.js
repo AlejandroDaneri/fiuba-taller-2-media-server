@@ -10,6 +10,8 @@ const constants = require('../src/constants/constants')
 const httpStatus = require('http-status-codes')
 const errors = require('../src/errors/errors')
 
+const PICTURES_URL = constants.PREFIX_URL + '/pictures/'
+
 beforeEach(() =>
   knex.migrate
     .forceFreeMigrationsLock()
@@ -24,7 +26,7 @@ it('should create a new avatar when payload is fine', done => {
     user_id: '231asd5ww1'
   }
   request
-    .post(constants.PREFIX_URL + '/pictures')
+    .post(PICTURES_URL)
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.CREATED)
@@ -40,7 +42,7 @@ it('should create a new avatar when payload is wrong', done => {
     user_id: '32a1sd5asd654'
   }
   request
-    .post(constants.PREFIX_URL + '/pictures')
+    .post(PICTURES_URL)
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.BAD_REQUEST)
@@ -57,7 +59,7 @@ it('should not create a new avatar when user_id is duplicated', done => {
     user_id: '32a1sd5asd654'
   }
   request
-    .post(constants.PREFIX_URL + '/pictures')
+    .post(PICTURES_URL)
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.CONFLICT)
@@ -74,7 +76,7 @@ it('should get specific avatar when gets /pictures/user_id', done => {
     user_id: '32a1sd5asd654',
     url: 'http://algo2.com'
   }
-  request.get(constants.PREFIX_URL + '/pictures/32a1sd5asd654').then(res => {
+  request.get(PICTURES_URL + '32a1sd5asd654').then(res => {
     expect(res.statusCode).toEqual(httpStatus.OK)
     expect(res.body).toMatchObject(expected)
     done()
@@ -82,7 +84,7 @@ it('should get specific avatar when gets /pictures/user_id', done => {
 })
 
 it('should return not found when gets /pcitures/id when user not exists', done => {
-  request.get(constants.PREFIX_URL + '/pictures/notFound').then(res => {
+  request.get(PICTURES_URL + 'notFound').then(res => {
     expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
     expect(res.body).toMatchObject(
       errors.response(-1, 'Picture of notFound not found')
@@ -98,24 +100,22 @@ it('should delete picture when ID exists', done => {
     user_id: 'toDelete123'
   }
   request
-    .post(constants.PREFIX_URL + '/pictures')
+    .post(PICTURES_URL)
     .send(obj)
     .then(() => {
-      request
-        .delete(constants.PREFIX_URL + `/pictures/${obj.user_id}`)
-        .then(res => {
-          expect(res.statusCode).toEqual(httpStatus.OK)
-          expect(res.body).toStrictEqual(
-            `Successfully deleted picture of ${obj.user_id}`
-          )
-          done()
-        })
+      request.delete(PICTURES_URL + `${obj.user_id}`).then(res => {
+        expect(res.statusCode).toEqual(httpStatus.OK)
+        expect(res.body).toStrictEqual(
+          `Successfully deleted picture of ${obj.user_id}`
+        )
+        done()
+      })
     })
 })
 
 it('should not delete any picture when ID not exists', done => {
   // TODO: revisar done
-  request.delete(constants.PREFIX_URL + '/pictures/32154').then(res => {
+  request.delete(PICTURES_URL + '32154').then(res => {
     expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
     expect(res.body).toMatchObject(
       errors.response(-1, 'Picture of ' + 32154 + ' not found')
@@ -130,12 +130,12 @@ it('should update avatar when PATCH /pictures ', done => {
     user_id: 'toUpdate'
   }
   request
-    .post(constants.PREFIX_URL + '/pictures')
+    .post(PICTURES_URL)
     .send(obj)
     .then(() => {
       obj.name = 'updated.png'
       request
-        .patch(constants.PREFIX_URL + `/pictures/${obj.user_id}`)
+        .patch(PICTURES_URL + `${obj.user_id}`)
         .send(obj)
         .then(res => {
           expect(res.statusCode).toEqual(httpStatus.OK)
