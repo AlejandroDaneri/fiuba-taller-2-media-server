@@ -33,12 +33,29 @@ pictures.post(
   }
 )
 
-// pictures.patch('/:id', helper.lookupVideo, function (req, res, next) {
-//   //recibe el nombre
-//   res.json(req.video)
-// })
-//
-//
+pictures.patch('/:id', helper.validatePayload2, helper.lookupPicture, function (
+  req,
+  res,
+  next
+) {
+  const id = req.params.id
+  const name = req.body.name
+  fb.getAvatarLink(name)
+    .then(url => {
+      queries.updatePicture(id, name, url).then(() => {
+        logger.log(`Successfully update picture of ${id}`)
+        req.body.url = url
+        res.status(httpStatus.OK).json(req.body)
+      })
+    })
+    .catch(
+      /* istanbul ignore next */ err => {
+        req.error = errors.response(-1, 'Picture cannot be updated')
+        next(err)
+      }
+    )
+})
+
 pictures.get('/:id', helper.lookupPicture, function (req, res, next) {
   res.json(req.picture)
 })
@@ -49,8 +66,8 @@ pictures.delete('/:id', helper.lookupPicture, async function (req, res, next) {
     .deletePicture(id)
     .then(({ name: filename }) => {
       fb.deletePicture(filename)
-      logger.log(`Successfully deleted video ${id}`)
-      res.status(httpStatus.OK).json(`Successfully deleted video ${id}`)
+      logger.log(`Successfully deleted picture of ${id}`)
+      res.status(httpStatus.OK).json(`Successfully deleted picture of ${id}`)
     })
     .catch(
       /* istanbul ignore next */ err => {

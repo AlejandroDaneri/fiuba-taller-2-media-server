@@ -65,8 +65,14 @@ async function deletePicture (id) {
   return deleted
 }
 
-async function addPicture (content) {
+function addPicture (content) {
   return Pictures().insert(content, 'user_id')
+}
+
+function updatePicture (userID, name, url) {
+  return Pictures()
+    .where({ user_id: userID })
+    .update({ name: name, url: url })
 }
 
 module.exports = {
@@ -76,5 +82,6 @@ module.exports = {
   deleteVideo: deleteVideo,
   addPicture: addPicture,
   getPicture: getPicture,
-  deletePicture: deletePicture
+  deletePicture: deletePicture,
+  updatePicture: updatePicture
 }

@@ -106,7 +106,7 @@ it('should delete picture when ID exists', done => {
         .then(res => {
           expect(res.statusCode).toEqual(httpStatus.OK)
           expect(res.body).toStrictEqual(
-            `Successfully deleted video ${obj.user_id}`
+            `Successfully deleted picture of ${obj.user_id}`
           )
           done()
         })
@@ -122,6 +122,27 @@ it('should not delete any picture when ID not exists', done => {
     )
     done()
   })
+})
+
+it('should update avatar when PATCH /pictures ', done => {
+  const obj = {
+    name: 'example.png',
+    user_id: 'toUpdate'
+  }
+  request
+    .post(constants.PREFIX_URL + '/pictures')
+    .send(obj)
+    .then(() => {
+      obj.name = 'updated.png'
+      request
+        .patch(constants.PREFIX_URL + `/pictures/${obj.user_id}`)
+        .send(obj)
+        .then(res => {
+          expect(res.statusCode).toEqual(httpStatus.OK)
+          expect(res.body).toMatchObject(obj)
+          done()
+        })
+    })
 })
 
 afterAll(async function (done) {
