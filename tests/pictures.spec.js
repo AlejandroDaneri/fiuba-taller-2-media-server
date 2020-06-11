@@ -81,6 +81,16 @@ it('should get specific avatar when gets /pictures/user_id', done => {
   })
 })
 
+it('should return not found when gets /pcitures/id when user not exists', done => {
+  request.get(constants.PREFIX_URL + '/pictures/notFound').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
+    expect(res.body).toMatchObject(
+      errors.response(-1, 'Picture of notFound not found')
+    )
+    done()
+  })
+})
+
 afterAll(async function (done) {
   await knex.destroy()
   app.close(done)
