@@ -8,7 +8,7 @@ const request = supertest(app)
 const knex = require('../db/knex')
 const constants = require('../src/constants/constants')
 const httpStatus = require('http-status-codes')
-// const errors = require('../src/errors/errors')
+const errors = require('../src/errors/errors')
 
 beforeEach(() =>
   knex.migrate
@@ -18,7 +18,7 @@ beforeEach(() =>
     .then(() => knex.seed.run())
 )
 
-it('should create a new video when payload is fine', done => {
+it('should create a new avatar when payload is fine', done => {
   const obj = {
     name: 'pic1.jpg',
     user_id: '32a1sd5asd654'
@@ -31,6 +31,22 @@ it('should create a new video when payload is fine', done => {
       const resp = res.body
       expect(resp).toMatchObject(obj)
       expect(resp.url).toMatch(/(https:)/i)
+      done()
+    })
+})
+
+it('should create a new avatar when payload is wrong', done => {
+  const obj = {
+    user_id: '32a1sd5asd654'
+  }
+  request
+    .post(constants.PREFIX_URL + '/pictures')
+    .send(obj)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.BAD_REQUEST)
+      expect(res.body).toMatchObject(
+        errors.response(-1, 'Payload is malformed')
+      )
       done()
     })
 })
