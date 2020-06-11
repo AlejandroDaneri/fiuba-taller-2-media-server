@@ -101,7 +101,7 @@ module.exports = {
     })
   },
 
-  lookupVideo2 (req, res, next) {
+  lookupPicture (req, res, next) {
     const userID = req.params.id
     queries.getPicture(userID, function (result, err) {
       /* istanbul ignore if */

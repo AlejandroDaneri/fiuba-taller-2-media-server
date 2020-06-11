@@ -81,6 +81,22 @@ class Firebase {
         )
       )
   }
+
+  deletePicture (filename) {
+    // Deletes the file from the bucket
+    return this.storage
+      .bucket(bucketName)
+      .file(`${baseAvatarsUrl}${filename}`)
+      .delete()
+      .then(() => {
+        logger.log(`gs://${bucketName}/${baseAvatarsUrl}${filename} deleted.`)
+      })
+      .catch(() =>
+        logger.error(
+          `Error deleting gs://${bucketName}/${baseAvatarsUrl}${filename}`
+        )
+      )
+  }
 }
 
 module.exports = Firebase

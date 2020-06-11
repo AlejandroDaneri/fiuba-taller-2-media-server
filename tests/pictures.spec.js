@@ -91,6 +91,39 @@ it('should return not found when gets /pcitures/id when user not exists', done =
   })
 })
 
+it('should delete picture when ID exists', done => {
+  // TODO: revisar done
+  const obj = {
+    name: 'example.png',
+    user_id: 'toDelete123'
+  }
+  request
+    .post(constants.PREFIX_URL + '/pictures')
+    .send(obj)
+    .then(() => {
+      request
+        .delete(constants.PREFIX_URL + `/pictures/${obj.user_id}`)
+        .then(res => {
+          expect(res.statusCode).toEqual(httpStatus.OK)
+          expect(res.body).toStrictEqual(
+            `Successfully deleted video ${obj.user_id}`
+          )
+          done()
+        })
+    })
+})
+
+it('should not delete any picture when ID not exists', done => {
+  // TODO: revisar done
+  request.delete(constants.PREFIX_URL + '/pictures/32154').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
+    expect(res.body).toMatchObject(
+      errors.response(-1, 'Picture of ' + 32154 + ' not found')
+    )
+    done()
+  })
+})
+
 afterAll(async function (done) {
   await knex.destroy()
   app.close(done)

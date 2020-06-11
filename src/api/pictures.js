@@ -39,25 +39,25 @@ pictures.post(
 // })
 //
 //
-pictures.get('/:id', helper.lookupVideo2, function (req, res, next) {
+pictures.get('/:id', helper.lookupPicture, function (req, res, next) {
   res.json(req.picture)
 })
-//
-// pictures.delete('/:id', helper.lookupVideo, async function (req, res, next) {
-//   const id = req.params.id
-//   queries
-//     .deleteVideo(id)
-//     .then(({ name: filename }) => {
-//       fb.deleteVideo(filename)
-//       logger.log(`Successfully deleted video ${id}`)
-//       res.status(httpStatus.OK).json(`Successfully deleted video ${id}`)
-//     })
-//     .catch(
-//       /* istanbul ignore next */ err => {
-//         req.error = errors.response(-1, 'Video cannot be deleted')
-//         next(err)
-//       }
-//     )
-// })
+
+pictures.delete('/:id', helper.lookupPicture, async function (req, res, next) {
+  const id = req.params.id
+  queries
+    .deletePicture(id)
+    .then(({ name: filename }) => {
+      fb.deletePicture(filename)
+      logger.log(`Successfully deleted video ${id}`)
+      res.status(httpStatus.OK).json(`Successfully deleted video ${id}`)
+    })
+    .catch(
+      /* istanbul ignore next */ err => {
+        req.error = errors.response(-1, 'Picture cannot be deleted')
+        next(err)
+      }
+    )
+})
 
 module.exports = pictures

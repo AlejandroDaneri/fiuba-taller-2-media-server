@@ -54,6 +54,16 @@ async function deleteVideo (id) {
     .del()
   return deleted
 }
+async function deletePicture (id) {
+  const deleted = await Pictures()
+    .select('name')
+    .where('user_id', id)
+    .first()
+  await Videos()
+    .where('user_id', id)
+    .del()
+  return deleted
+}
 
 async function addPicture (content) {
   return Pictures().insert(content, 'user_id')
@@ -65,5 +75,6 @@ module.exports = {
   getSingleVideo: getSingleVideo,
   deleteVideo: deleteVideo,
   addPicture: addPicture,
-  getPicture: getPicture
+  getPicture: getPicture,
+  deletePicture: deletePicture
 }
