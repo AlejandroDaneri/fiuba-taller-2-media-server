@@ -13,7 +13,7 @@ pictures.use(express.json())
 
 pictures.post(
   '/',
-  helper.validatePayload2,
+  helper.validatePicturePayload,
   helper.checkPictureDuplicate,
   async function (req, res, next) {
     var reqBody = req.body
@@ -33,28 +33,29 @@ pictures.post(
   }
 )
 
-pictures.patch('/:id', helper.validatePayload2, helper.lookupPicture, function (
-  req,
-  res,
-  next
-) {
-  const id = req.params.id
-  const name = req.body.name
-  fb.getAvatarLink(name)
-    .then(url => {
-      queries.updatePicture(id, name, url).then(() => {
-        logger.log(`Successfully update picture of ${id}`)
-        req.body.url = url
-        res.status(httpStatus.OK).json(req.body)
+pictures.patch(
+  '/:id',
+  helper.validatePicturePayload,
+  helper.lookupPicture,
+  function (req, res, next) {
+    const id = req.params.id
+    const name = req.body.name
+    fb.getAvatarLink(name)
+      .then(url => {
+        queries.updatePicture(id, name, url).then(() => {
+          logger.log(`Successfully update picture of ${id}`)
+          req.body.url = url
+          res.status(httpStatus.OK).json(req.body)
+        })
       })
-    })
-    .catch(
-      /* istanbul ignore next */ err => {
-        req.error = errors.response(-1, 'Picture cannot be updated')
-        next(err)
-      }
-    )
-})
+      .catch(
+        /* istanbul ignore next */ err => {
+          req.error = errors.response(-1, 'Picture cannot be updated')
+          next(err)
+        }
+      )
+  }
+)
 
 pictures.get('/:id', helper.lookupPicture, function (req, res, next) {
   res.json(req.result)

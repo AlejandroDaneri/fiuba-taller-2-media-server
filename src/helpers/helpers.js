@@ -3,6 +3,25 @@ var httpStatus = require('http-status-codes')
 var errors = require('../errors/errors')
 const logger = require('../config/logger')
 
+function empty (input) {
+  return input === undefined || input === ''
+}
+
+function isMalformed (iterable) {
+  for (const field of iterable) {
+    if (empty(field)) return true
+  }
+}
+
+function validate (fields, res, next) {
+  if (isMalformed(fields.values())) {
+    logger.warn('Malformed payload')
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .json(errors.response(-1, 'Payload is malformed'))
+  } else next()
+}
+
 function baseLookup (id, func, msg, req, res, next) {
   func(id, function (result, err) {
     /* istanbul ignore if */
@@ -48,37 +67,25 @@ module.exports = {
     return [message, result]
   },
 
-  validatePayload (req, res, next) {
-    function empty (input) {
-      return input === undefined || input === ''
-    }
+  validateVideoPayload (req, res, next) {
     const payload = req.body
-    if (
-      empty(payload.video_id) ||
-      empty(payload.name) ||
-      empty(payload.date_created) ||
-      empty(payload.type) ||
-      empty(payload.user_id) ||
-      empty(payload.size)
-    ) {
-      logger.warn('Malformed payload')
-      return res
-        .status(httpStatus.BAD_REQUEST)
-        .json(errors.response(-1, 'Payload is malformed'))
-    } else next()
+    validate(
+      [
+        payload.video_id,
+        payload.name,
+        payload.date_created,
+        payload.type,
+        payload.user_id,
+        payload.size
+      ],
+      res,
+      next
+    )
   },
 
-  validatePayload2 (req, res, next) {
-    function empty (input) {
-      return input === undefined || input === ''
-    }
+  validatePicturePayload (req, res, next) {
     const payload = req.body
-    if (empty(payload.name) || empty(payload.user_id)) {
-      logger.warn('Malformed payload')
-      return res
-        .status(httpStatus.BAD_REQUEST)
-        .json(errors.response(-1, 'Payload is malformed'))
-    } else next()
+    validate([payload.name, payload.user_id], res, next)
   },
 
   lookupVideo (req, res, next) {

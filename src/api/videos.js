@@ -13,7 +13,7 @@ videos.use(express.json())
 
 videos.post(
   '/',
-  helper.validatePayload,
+  helper.validateVideoPayload,
   helper.checkVideoDuplicate,
   async function (req, res, next) {
     var reqBody = req.body
