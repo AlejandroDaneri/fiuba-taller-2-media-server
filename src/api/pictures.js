@@ -39,9 +39,9 @@ pictures.post(
 // })
 //
 //
-// pictures.get('/:id', helper.lookupVideo, function (req, res, next) {
-//   res.json(req.video)
-// })
+pictures.get('/:id', helper.lookupVideo2, function (req, res, next) {
+  res.json(req.picture)
+})
 //
 // pictures.delete('/:id', helper.lookupVideo, async function (req, res, next) {
 //   const id = req.params.id

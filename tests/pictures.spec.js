@@ -67,6 +67,20 @@ it('should not create a new avatar when user_id is duplicated', done => {
       done()
     })
 })
+
+it('should get specific avatar when gets /pictures/user_id', done => {
+  const expected = {
+    name: 'pic1.jpg',
+    user_id: '32a1sd5asd654',
+    url: 'http://algo2.com'
+  }
+  request.get(constants.PREFIX_URL + '/pictures/32a1sd5asd654').then(res => {
+    expect(res.statusCode).toEqual(httpStatus.OK)
+    expect(res.body).toMatchObject(expected)
+    done()
+  })
+})
+
 afterAll(async function (done) {
   await knex.destroy()
   app.close(done)
