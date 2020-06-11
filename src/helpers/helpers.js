@@ -19,6 +19,21 @@ function baseLookup (id, func, msg, req, res, next) {
   })
 }
 
+function baseCheckDuplicates (id, func, msg, req, res, next) {
+  func(id, function (result, err) {
+    /* istanbul ignore if */
+    if (err) {
+      req.error = errors.response(-1, 'Unexpected error')
+      next(err)
+    } else if (result.length > 0) {
+      logger.warn(`${msg} already exists`)
+      res.statusCode = httpStatus.CONFLICT
+      return res.json(errors.response(-1, `${msg} already exists`))
+    }
+    next()
+  })
+}
+
 module.exports = {
   async getVideos (id) {
     var result
@@ -92,35 +107,25 @@ module.exports = {
 
   checkVideoDuplicate (req, res, next) {
     const videoID = req.body.video_id
-    queries.getSingleVideo(videoID, function (result, err) {
-      /* istanbul ignore if */
-      if (err) {
-        req.error = errors.response(-1, 'Unexpected error')
-        next(err)
-      } else if (result.length > 0) {
-        logger.warn(`Video ${videoID} already exists`)
-        res.statusCode = httpStatus.CONFLICT
-        return res.json(errors.response(-1, `Video ${videoID} already exists`))
-      }
-      next()
-    })
+    baseCheckDuplicates(
+      videoID,
+      queries.getSingleVideo,
+      `Video ${videoID}`,
+      req,
+      res,
+      next
+    )
   },
 
   checkPictureDuplicate (req, res, next) {
     const userID = req.body.user_id
-    queries.getPicture(userID, function (result, err) {
-      /* istanbul ignore if */
-      if (err) {
-        req.error = errors.response(-1, 'Unexpected error')
-        next(err)
-      } else if (result.length > 0) {
-        logger.warn(`Picture of ${userID} already exists`)
-        res.statusCode = httpStatus.CONFLICT
-        return res.json(
-          errors.response(-1, `Picture of ${userID} already exists`)
-        )
-      }
-      next()
-    })
+    baseCheckDuplicates(
+      userID,
+      queries.getPicture,
+      `Picture of ${userID}`,
+      req,
+      res,
+      next
+    )
   }
 }
