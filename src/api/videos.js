@@ -17,7 +17,7 @@ videos.post('/', helper.validatePayload, helper.checkDuplicate, async function (
   next
 ) {
   var reqBody = req.body
-  const [url, thumb] = await fb.getLinks(reqBody.name)
+  const [url, thumb] = await fb.getVideoLinks(reqBody.name)
   reqBody.url = url
   reqBody.thumb = thumb
   queries

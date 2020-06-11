@@ -4,6 +4,7 @@ const constants = require('../constants/constants')
 
 const bucketName = 'chotuve-grupo8.appspot.com'
 const baseVideosUrl = 'uploads/videos/test/'
+const baseAvatarsUrl = 'uploads/videos/test/'
 
 const config = {
   action: 'read',
@@ -30,7 +31,7 @@ class Firebase {
     Firebase.instance = this
   }
 
-  async getLinks (filename) {
+  async getVideoLinks (filename) {
     const video = await this.storage
       .bucket(bucketName)
       .file(`${baseVideosUrl}${filename}`)
@@ -52,6 +53,17 @@ class Firebase {
         )
       )
     return [video[0], img[0]]
+  }
+
+  async getAvatarLink (filename) {
+    const avatar = await this.storage
+      .bucket(bucketName)
+      .file(`${baseAvatarsUrl}${filename}`)
+      .getSignedUrl(config)
+      .catch(() =>
+        logger.error(`Error creating link for gs://${bucketName}/${filename}`)
+      )
+    return avatar[0]
   }
 
   deleteVideo (filename) {
