@@ -14,7 +14,7 @@ pictures.use(express.json())
 pictures.post(
   '/',
   helper.validatePayload2,
-  helper.checkDuplicate2,
+  helper.checkPictureDuplicate,
   async function (req, res, next) {
     var reqBody = req.body
     reqBody.url = await fb.getAvatarLink(reqBody.name)
@@ -57,7 +57,7 @@ pictures.patch('/:id', helper.validatePayload2, helper.lookupPicture, function (
 })
 
 pictures.get('/:id', helper.lookupPicture, function (req, res, next) {
-  res.json(req.picture)
+  res.json(req.result)
 })
 
 pictures.delete('/:id', helper.lookupPicture, async function (req, res, next) {
