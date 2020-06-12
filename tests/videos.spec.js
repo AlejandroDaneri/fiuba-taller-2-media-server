@@ -11,6 +11,10 @@ const httpStatus = require('http-status-codes')
 const errors = require('../src/errors/errors')
 
 const VIDEOS_URL = constants.PREFIX_URL + '/videos/'
+const header = {
+  'X-Auth-Token': process.env.API_KEY,
+  'Content-Type': 'application/json'
+}
 
 beforeEach(() =>
   knex.migrate
@@ -31,6 +35,7 @@ it('should create a new video when payload is fine', done => {
   }
   request
     .post(VIDEOS_URL)
+    .set(header)
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.CREATED)
@@ -48,6 +53,7 @@ it('should not create a new video when payload is wrong', done => {
   }
   request
     .post(VIDEOS_URL)
+    .set(header)
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.BAD_REQUEST)
@@ -69,6 +75,7 @@ it('should not create a new video when video_id is duplicated', done => {
   }
   request
     .post(VIDEOS_URL)
+    .set(header)
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.CONFLICT)
@@ -115,10 +122,13 @@ it('should get all videos when gets /videos', () => {
       user_id: '32a1sd5asd654'
     }
   ]
-  request.get(VIDEOS_URL).then(res => {
-    expect(res.statusCode).toEqual(httpStatus.OK)
-    expect(res.body).toStrictEqual({ videos: expected })
-  })
+  request
+    .get(VIDEOS_URL)
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.OK)
+      expect(res.body).toStrictEqual({ videos: expected })
+    })
 })
 
 it('should get specific video when gets /videos/id', done => {
@@ -132,21 +142,27 @@ it('should get specific video when gets /videos/id', done => {
     thumb: 'http://algo.com',
     user_id: '32a1sd5asd654'
   }
-  request.get(VIDEOS_URL + '120').then(res => {
-    expect(res.statusCode).toEqual(httpStatus.OK)
-    expect(res.body).toMatchObject(expected)
-    done()
-  })
+  request
+    .get(VIDEOS_URL + '120')
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.OK)
+      expect(res.body).toMatchObject(expected)
+      done()
+    })
 })
 
 it('should return not found when gets /videos/id when video not exists', done => {
-  request.get(VIDEOS_URL + '/12320').then(res => {
-    expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
-    expect(res.body).toMatchObject(
-      errors.response(-1, 'Video ' + 12320 + ' not found')
-    )
-    done()
-  })
+  request
+    .get(VIDEOS_URL + '/12320')
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
+      expect(res.body).toMatchObject(
+        errors.response(-1, 'Video ' + 12320 + ' not found')
+      )
+      done()
+    })
 })
 
 it('should get specific video when gets /videos?id', done => {
@@ -162,11 +178,14 @@ it('should get specific video when gets /videos?id', done => {
       user_id: '32a1sd5asd654'
     }
   ]
-  request.get(constants.PREFIX_URL + '/videos?id=120').then(res => {
-    expect(res.statusCode).toEqual(httpStatus.OK)
-    expect(res.body).toMatchObject({ videos: expected })
-    done()
-  })
+  request
+    .get(constants.PREFIX_URL + '/videos?id=120')
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.OK)
+      expect(res.body).toMatchObject({ videos: expected })
+      done()
+    })
 })
 
 it('should delete video when ID exists', done => {
@@ -181,25 +200,32 @@ it('should delete video when ID exists', done => {
   }
   request
     .post(VIDEOS_URL)
+    .set(header)
     .send(obj)
     .then(() => {
-      request.delete(VIDEOS_URL + '5000').then(res => {
-        expect(res.statusCode).toEqual(httpStatus.OK)
-        expect(res.body).toStrictEqual('Successfully deleted video 5000')
-        done()
-      })
+      request
+        .delete(VIDEOS_URL + '5000')
+        .set(header)
+        .then(res => {
+          expect(res.statusCode).toEqual(httpStatus.OK)
+          expect(res.body).toStrictEqual('Successfully deleted video 5000')
+          done()
+        })
     })
 })
 
 it('should not delete any video when ID not exists', done => {
   // TODO: revisar done
-  request.delete(VIDEOS_URL + '32154').then(res => {
-    expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
-    expect(res.body).toMatchObject(
-      errors.response(-1, 'Video ' + 32154 + ' not found')
-    )
-    done()
-  })
+  request
+    .delete(VIDEOS_URL + '32154')
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
+      expect(res.body).toMatchObject(
+        errors.response(-1, 'Video ' + 32154 + ' not found')
+      )
+      done()
+    })
 })
 
 afterAll(async function (done) {

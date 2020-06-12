@@ -5,7 +5,7 @@ var pictures = require('./pictures')
 const errors = require('../errors/errors')
 const logger = require('../config/logger')
 
-var utils = require('../helpers/utils')
+var utils = require('../utils/pgUtils')
 
 router.use('/videos', videos)
 router.use('/pictures', pictures)

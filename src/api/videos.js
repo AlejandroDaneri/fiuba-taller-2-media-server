@@ -3,13 +3,17 @@ var videos = express.Router()
 
 var httpStatus = require('http-status-codes')
 var queries = require('../../db/queries')
-var helper = require('../helpers/helpers')
+var helper = require('./helpers/helpers')
 var errors = require('../errors/errors')
 const logger = require('../config/logger')
+var auth = require('../utils/authUtils')
 
 var Firebase = require('../services/firebase')
 var fb = new Firebase()
+
 videos.use(express.json())
+
+videos.use(auth.clientApiKeyValidation)
 
 videos.post(
   '/',
@@ -17,7 +21,6 @@ videos.post(
   helper.checkVideoDuplicate,
   async function (req, res, next) {
     var reqBody = req.body
-    console.table(reqBody)
     const [url, thumb] = await fb.getVideoLinks(reqBody.name)
     reqBody.url = url
     reqBody.thumb = thumb

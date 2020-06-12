@@ -5,7 +5,7 @@ var checkPostgres = jest
   .mockImplementationOnce(() => Promise.resolve())
   .mockImplementationOnce(() => Promise.reject(new Error()))
 
-const utils = jest.mock('../helpers/utils', () => {
+const utils = jest.mock('../utils/pgUtils', () => {
   return {
     checkPostgres: checkPostgres
   }

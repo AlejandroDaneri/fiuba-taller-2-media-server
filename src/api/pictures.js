@@ -3,13 +3,16 @@ var pictures = express.Router()
 
 var httpStatus = require('http-status-codes')
 var queries = require('../../db/queries')
-var helper = require('../helpers/helpers')
+var helper = require('./helpers/helpers')
 var errors = require('../errors/errors')
 const logger = require('../config/logger')
+var auth = require('../utils/authUtils')
 
 var Firebase = require('../services/firebase')
 var fb = new Firebase()
 pictures.use(express.json())
+
+pictures.use(auth.clientApiKeyValidation)
 
 pictures.post(
   '/',
@@ -17,7 +20,6 @@ pictures.post(
   helper.checkPictureDuplicate,
   async function (req, res, next) {
     var reqBody = req.body
-    console.table(reqBody)
     reqBody.url = await fb.getAvatarLink(reqBody.name)
     queries
       .addPicture(reqBody)

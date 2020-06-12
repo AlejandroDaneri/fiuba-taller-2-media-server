@@ -1,7 +1,7 @@
-var queries = require('../../db/queries')
+var queries = require('../../../db/queries')
 var httpStatus = require('http-status-codes')
-var errors = require('../errors/errors')
-const logger = require('../config/logger')
+var errors = require('../../errors/errors')
+const logger = require('../../config/logger')
 
 function empty (input) {
   return input === undefined || input === ''
