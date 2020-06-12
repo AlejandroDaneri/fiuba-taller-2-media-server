@@ -17,6 +17,7 @@ videos.post(
   helper.checkVideoDuplicate,
   async function (req, res, next) {
     var reqBody = req.body
+    console.table(reqBody)
     const [url, thumb] = await fb.getVideoLinks(reqBody.name)
     reqBody.url = url
     reqBody.thumb = thumb

@@ -17,6 +17,7 @@ pictures.post(
   helper.checkPictureDuplicate,
   async function (req, res, next) {
     var reqBody = req.body
+    console.table(reqBody)
     reqBody.url = await fb.getAvatarLink(reqBody.name)
     queries
       .addPicture(reqBody)
