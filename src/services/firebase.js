@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 var admin = require('firebase-admin')
 const logger = require('../config/logger')
 const constants = require('../constants/constants')

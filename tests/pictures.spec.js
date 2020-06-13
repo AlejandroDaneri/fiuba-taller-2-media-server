@@ -1,6 +1,15 @@
 import 'jest'
-// TODO: revisar que no se llama al mock de firebase aunque lo importe
+
 process.env.NODE_ENV = 'test'
+
+const Firebase = require('../src/services/firebase')
+
+jest.spyOn(Firebase.prototype, 'getAvatarLink').mockImplementation(() => {
+  return Promise.resolve('https://mock.com')
+})
+jest.spyOn(Firebase.prototype, 'deletePicture').mockImplementation(() => {
+  return 'deleted'
+})
 
 const app = require('../app')
 const supertest = require('supertest')
