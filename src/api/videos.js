@@ -9,7 +9,6 @@ const logger = require('../config/logger')
 var auth = require('../utils/authUtils')
 
 var Firebase = require('../services/firebase')
-var fb = new Firebase()
 
 videos.use(express.json())
 
@@ -21,6 +20,7 @@ videos.post(
   helper.checkVideoDuplicate,
   async function (req, res, next) {
     var reqBody = req.body
+    const fb = new Firebase()
     const [url, thumb] = await fb.getVideoLinks(reqBody.name)
     reqBody.url = url
     reqBody.thumb = thumb
@@ -32,12 +32,10 @@ videos.post(
         )
         res.status(httpStatus.CREATED).send(reqBody)
       })
-      .catch(
-        /* istanbul ignore next */ err => {
-          req.error = errors.response(-1, 'Video cannot be added')
-          next(err)
-        }
-      )
+      .catch(err => {
+        req.error = errors.response(-1, 'Video cannot be added')
+        next(err)
+      })
   }
 )
 
@@ -48,12 +46,10 @@ videos.get('/', function (req, res, next) {
       logger.info(message)
       res.status(httpStatus.OK).json({ videos: result })
     })
-    .catch(
-      /* istanbul ignore next */ err => {
-        req.error = errors.response(-1, 'Video cannot be obtained')
-        next(err)
-      }
-    )
+    .catch(err => {
+      req.error = errors.response(-1, 'Video cannot be obtained')
+      next(err)
+    })
 })
 
 videos.get('/:id', helper.lookupVideo, function (req, res, next) {
@@ -62,6 +58,7 @@ videos.get('/:id', helper.lookupVideo, function (req, res, next) {
 
 videos.delete('/:id', helper.lookupVideo, async function (req, res, next) {
   const id = req.params.id
+  const fb = new Firebase()
   queries
     .deleteVideo(id)
     .then(({ name: filename }) => {
@@ -69,12 +66,10 @@ videos.delete('/:id', helper.lookupVideo, async function (req, res, next) {
       logger.log(`Successfully deleted video ${id}`)
       res.status(httpStatus.OK).json(`Successfully deleted video ${id}`)
     })
-    .catch(
-      /* istanbul ignore next */ err => {
-        req.error = errors.response(-1, 'Video cannot be deleted')
-        next(err)
-      }
-    )
+    .catch(err => {
+      req.error = errors.response(-1, 'Video cannot be deleted')
+      next(err)
+    })
 })
 
 module.exports = videos

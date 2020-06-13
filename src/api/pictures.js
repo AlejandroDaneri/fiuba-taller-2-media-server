@@ -9,7 +9,7 @@ const logger = require('../config/logger')
 var auth = require('../utils/authUtils')
 
 var Firebase = require('../services/firebase')
-var fb = new Firebase()
+
 pictures.use(express.json())
 
 pictures.use(auth.clientApiKeyValidation)
@@ -19,6 +19,7 @@ pictures.post(
   helper.validatePicturePayload,
   helper.checkPictureDuplicate,
   async function (req, res, next) {
+    const fb = new Firebase()
     var reqBody = req.body
     reqBody.url = await fb.getAvatarLink(reqBody.name)
     queries
@@ -27,12 +28,10 @@ pictures.post(
         logger.info(`New picture uploaded - USER:${reqBody.user_id}`)
         res.status(httpStatus.CREATED).send(reqBody)
       })
-      .catch(
-        /* istanbul ignore next */ err => {
-          req.error = errors.response(-1, 'Picture cannot be added')
-          next(err)
-        }
-      )
+      .catch(err => {
+        req.error = errors.response(-1, 'Picture cannot be added')
+        next(err)
+      })
   }
 )
 
@@ -41,6 +40,7 @@ pictures.patch(
   helper.validatePicturePayload,
   helper.lookupPicture,
   function (req, res, next) {
+    const fb = new Firebase()
     const id = req.params.id
     const name = req.body.name
     fb.getAvatarLink(name)
@@ -51,12 +51,10 @@ pictures.patch(
           res.status(httpStatus.OK).json(req.body)
         })
       })
-      .catch(
-        /* istanbul ignore next */ err => {
-          req.error = errors.response(-1, 'Picture cannot be updated')
-          next(err)
-        }
-      )
+      .catch(err => {
+        req.error = errors.response(-1, 'Picture cannot be updated')
+        next(err)
+      })
   }
 )
 
@@ -69,16 +67,15 @@ pictures.delete('/:id', helper.lookupPicture, async function (req, res, next) {
   queries
     .deletePicture(id)
     .then(({ name: filename }) => {
+      const fb = new Firebase()
       fb.deletePicture(filename)
       logger.log(`Successfully deleted picture of ${id}`)
       res.status(httpStatus.OK).json(`Successfully deleted picture of ${id}`)
     })
-    .catch(
-      /* istanbul ignore next */ err => {
-        req.error = errors.response(-1, 'Picture cannot be deleted')
-        next(err)
-      }
-    )
+    .catch(err => {
+      req.error = errors.response(-1, 'Picture cannot be deleted')
+      next(err)
+    })
 })
 
 module.exports = pictures

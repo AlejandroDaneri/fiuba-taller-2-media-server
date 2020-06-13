@@ -1,6 +1,14 @@
 import 'jest'
-// TODO: revisar que no se llama al mock de firebase aunque lo importe
+
 process.env.NODE_ENV = 'test'
+
+const Firebase = require('../src/services/firebase')
+jest.spyOn(Firebase.prototype, 'getVideoLinks').mockImplementation(() => {
+  return ['https://mock.com', 'https://mock.com']
+})
+jest.spyOn(Firebase.prototype, 'deleteVideo').mockImplementation(() => {
+  return 'mock'
+})
 
 const app = require('../app')
 const supertest = require('supertest')
@@ -41,6 +49,7 @@ it('should create a new video when payload is fine', done => {
       expect(res.statusCode).toEqual(httpStatus.CREATED)
       var resp = res.body
       expect(resp).toMatchObject(obj)
+      expect(resp.url).toMatch(/(https:)/i)
       done()
     })
 })
