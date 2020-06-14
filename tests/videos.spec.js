@@ -53,6 +53,30 @@ it('should create a new video when payload is fine', done => {
       done()
     })
 })
+
+it('should create a new video when payload is fine but with more fields', done => {
+  const obj = {
+    video_id: '1234',
+    name: 'salchicha',
+    date_created: '2020-05-09T19:00:31.362Z',
+    type: 'video/mp4',
+    size: 3420480,
+    user_id: '32a1sd5asd654'
+  }
+  obj.unknown = 'trash'
+  request
+    .post(VIDEOS_URL)
+    .set(header)
+    .send(obj)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.CREATED)
+      var resp = res.body
+      expect(resp).toMatchObject(obj)
+      expect(resp.url).toMatch(/(https:)/i)
+      done()
+    })
+})
+
 it('should not create a new video when payload is wrong', done => {
   const obj = {
     name: 'salchicha',

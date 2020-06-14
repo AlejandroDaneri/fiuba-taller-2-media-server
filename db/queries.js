@@ -15,7 +15,17 @@ function getAll () {
 }
 
 function addVideo (content) {
-  return Videos().insert(content, 'video_id')
+  const toSave = {
+    video_id: content.video_id,
+    name: content.name,
+    user_id: content.user_id,
+    date_created: content.date_created,
+    size: content.size,
+    type: content.type,
+    url: content.url,
+    thumb: content.thumb
+  }
+  return Videos().insert(toSave, 'video_id')
 }
 
 function getSingleVideo (videoID, callback = r => r) {
@@ -66,7 +76,12 @@ async function deletePicture (id) {
 }
 
 function addPicture (content) {
-  return Pictures().insert(content, 'user_id')
+  const toSave = {
+    name: content.name,
+    user_id: content.user_id,
+    url: content.url
+  }
+  return Pictures().insert(toSave, 'user_id')
 }
 
 function updatePicture (userID, name, url) {
