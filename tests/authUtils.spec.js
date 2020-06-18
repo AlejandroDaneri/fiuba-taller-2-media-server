@@ -25,7 +25,7 @@ it('request must be accepted when passing api_key', async done => {
   request
     .get('/api/v1/pictures/32a1sd5asd654')
     .set({
-      'X-Auth-Token': process.env.API_KEY,
+      'X-Client-ID': process.env.API_KEY,
       'Content-Type': 'application/json'
     })
     .then(res => {
@@ -38,7 +38,7 @@ it('request must be accepted when passing api_key', async done => {
 it('request must fail when passing wrong api_key', async done => {
   request
     .get('/api/v1/pictures/32a1sd5asd654')
-    .set({ 'X-Auth-Token': 'cualquiera', 'Content-Type': 'application/json' })
+    .set({ 'X-Client-ID': 'cualquiera', 'Content-Type': 'application/json' })
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.UNAUTHORIZED)
       done()

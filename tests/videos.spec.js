@@ -20,7 +20,7 @@ const errors = require('../src/errors/errors')
 
 const VIDEOS_URL = constants.PREFIX_URL + '/videos/'
 const header = {
-  'X-Auth-Token': process.env.API_KEY,
+  'X-Client-ID': process.env.API_KEY,
   'Content-Type': 'application/json'
 }
 
