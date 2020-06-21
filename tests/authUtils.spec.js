@@ -16,7 +16,7 @@ beforeEach(() =>
     .then(() => knex.seed.run())
 )
 
-it('request must be accepted when passing api_key', async done => {
+it('request must be accepted when passing api_key', done => {
   const expected = {
     name: 'pic1.jpg',
     user_id: '32a1sd5asd654',
@@ -35,7 +35,7 @@ it('request must be accepted when passing api_key', async done => {
     })
 })
 
-it('request must fail when passing wrong api_key', async done => {
+it('request must fail when passing wrong api_key', done => {
   request
     .get('/api/v1/pictures/32a1sd5asd654')
     .set({ 'X-Client-ID': 'cualquiera', 'Content-Type': 'application/json' })
@@ -45,7 +45,7 @@ it('request must fail when passing wrong api_key', async done => {
     })
 })
 
-it('request must fail when not passing api_key', async done => {
+it('request must fail when not passing api_key', done => {
   request
     .get('/api/v1/pictures/32a1sd5asd654')
     .set({ 'Content-Type': 'application/json' })

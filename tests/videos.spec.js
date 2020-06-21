@@ -119,7 +119,7 @@ it('should not create a new video when video_id is duplicated', done => {
     })
 })
 
-it('should get all videos when gets /videos', () => {
+it('should get all videos when gets /videos', done => {
   const expected = [
     {
       id: 1,
@@ -161,6 +161,7 @@ it('should get all videos when gets /videos', () => {
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.OK)
       expect(res.body).toStrictEqual({ videos: expected })
+      done()
     })
 })
 
@@ -222,7 +223,6 @@ it('should get specific video when gets /videos?id', done => {
 })
 
 it('should delete video when ID exists', done => {
-  // TODO: revisar done
   const obj = {
     video_id: '5000',
     name: 'salchicha',
@@ -248,7 +248,6 @@ it('should delete video when ID exists', done => {
 })
 
 it('should not delete any video when ID not exists', done => {
-  // TODO: revisar done
   request
     .delete(VIDEOS_URL + '32154')
     .set(header)

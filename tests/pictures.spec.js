@@ -116,7 +116,6 @@ it('should return not found when gets /pcitures/id when user not exists', done =
 })
 
 it('should delete picture when ID exists', done => {
-  // TODO: revisar done
   const obj = {
     name: 'example.png',
     user_id: 'toDelete123'
@@ -140,7 +139,6 @@ it('should delete picture when ID exists', done => {
 })
 
 it('should not delete any picture when ID not exists', done => {
-  // TODO: revisar done
   request
     .delete(PICTURES_URL + '32154')
     .set(header)
