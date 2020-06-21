@@ -13,8 +13,6 @@ Staging: https://fiuba-taller-2-media-server-st.herokuapp.com/
 
 Run app
 
-`npm install`
-
 `docker-compose build`
 
 `docker-compose up`
