@@ -13,7 +13,7 @@ router.use(constants.PREFIX_URL + '/pictures', pictures)
 router.use(express.json())
 
 router.get('/', function (req, res, next) {
-  res.send('Hello World!')
+  res.send('Welcome to Choutuve Media Server API (V1)!')
 })
 
 router.get('/ping', function (req, res, next) {
