@@ -3,7 +3,6 @@ var express = require('express')
 var cors = require('cors')
 var app = express()
 var routes = require('./src/api/routes')
-const constants = require('./src/constants/constants')
 const logger = require('./src/config/logger')
 
 app.use(express.json())
@@ -26,7 +25,7 @@ function errorHandler (err, req, res, next) {
 }
 
 app.use(cors())
-app.use(constants.PREFIX_URL + '/', routes)
+app.use('/', routes)
 app.use(errorHandler)
 
 const server = app.listen(process.env.PORT, function () {

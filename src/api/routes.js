@@ -4,11 +4,12 @@ var videos = require('./videos')
 var pictures = require('./pictures')
 const errors = require('../errors/errors')
 const logger = require('../config/logger')
+const constants = require('../constants/constants')
 
 var utils = require('../utils/pgUtils')
 
-router.use('/videos', videos)
-router.use('/pictures', pictures)
+router.use(constants.PREFIX_URL + '/videos', videos)
+router.use(constants.PREFIX_URL + '/pictures', pictures)
 router.use(express.json())
 
 router.get('/', function (req, res, next) {
