@@ -122,7 +122,6 @@ it('should not create a new video when video_id is duplicated', done => {
 it('should get all videos when gets /videos', done => {
   const expected = [
     {
-      id: 1,
       video_id: '120',
       name: 'salchicha',
       date_created: '2020-05-09T19:00:31.362Z',
@@ -133,7 +132,6 @@ it('should get all videos when gets /videos', done => {
       user_id: '32a1sd5asd654'
     },
     {
-      id: 2,
       video_id: '112',
       name: 'doberman',
       date_created: '2020-05-09T19:00:31.362Z',
@@ -144,7 +142,6 @@ it('should get all videos when gets /videos', done => {
       user_id: '32a1sd5asd654'
     },
     {
-      id: 3,
       video_id: '125',
       name: 'ovejero',
       date_created: '2020-05-09T19:00:31.362Z',
