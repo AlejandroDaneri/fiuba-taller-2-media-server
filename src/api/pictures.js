@@ -70,7 +70,11 @@ pictures.delete('/:id', helper.lookupPicture, async function (req, res, next) {
       const fb = new Firebase()
       fb.deletePicture(filename)
       logger.log(`Successfully deleted picture of ${id}`)
-      res.status(httpStatus.OK).json(`Successfully deleted picture of ${id}`)
+      res.status(httpStatus.OK).json({
+        code: 0,
+        message: `Successfully deleted picture of ${id}`,
+        data: null
+      })
     })
     .catch(err => {
       req.error = errors.response(-1, 'Picture cannot be deleted')

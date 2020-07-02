@@ -256,7 +256,11 @@ it('should delete video when ID exists', done => {
         .set(header)
         .then(res => {
           expect(res.statusCode).toEqual(httpStatus.OK)
-          expect(res.body).toStrictEqual('Successfully deleted video 5000')
+          expect(res.body).toMatchObject({
+            code: 0,
+            message: 'Successfully deleted video 5000',
+            data: null
+          })
           done()
         })
     })

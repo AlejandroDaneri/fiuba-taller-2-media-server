@@ -64,7 +64,11 @@ videos.delete('/:id', helper.lookupVideo, async function (req, res, next) {
     .then(({ name: filename }) => {
       fb.deleteVideo(filename)
       logger.log(`Successfully deleted video ${id}`)
-      res.status(httpStatus.OK).json(`Successfully deleted video ${id}`)
+      res.status(httpStatus.OK).json({
+        code: 0,
+        message: `Successfully deleted video ${id}`,
+        data: null
+      })
     })
     .catch(err => {
       req.error = errors.response(-1, 'Video cannot be deleted')

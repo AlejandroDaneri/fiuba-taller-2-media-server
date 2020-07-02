@@ -148,9 +148,11 @@ it('should delete picture when ID exists', done => {
         .set(header)
         .then(res => {
           expect(res.statusCode).toEqual(httpStatus.OK)
-          expect(res.body).toStrictEqual(
-            `Successfully deleted picture of ${obj.user_id}`
-          )
+          expect(res.body).toMatchObject({
+            code: 0,
+            message: `Successfully deleted picture of ${obj.user_id}`,
+            data: null
+          })
           done()
         })
     })
