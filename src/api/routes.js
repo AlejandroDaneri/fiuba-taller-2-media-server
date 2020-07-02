@@ -1,16 +1,19 @@
 var express = require('express')
 var router = express.Router()
 var videos = require('./videos')
+var pictures = require('./pictures')
 const errors = require('../errors/errors')
 const logger = require('../config/logger')
+const constants = require('../constants/constants')
 
-var utils = require('../helpers/utils')
+var utils = require('../utils/pgUtils')
 
-router.use('/videos', videos)
+router.use(constants.PREFIX_URL + '/videos', videos)
+router.use(constants.PREFIX_URL + '/pictures', pictures)
 router.use(express.json())
 
 router.get('/', function (req, res, next) {
-  res.send('Hello World!')
+  res.send('Welcome to Choutuve Media Server API (V1)!')
 })
 
 router.get('/ping', function (req, res, next) {

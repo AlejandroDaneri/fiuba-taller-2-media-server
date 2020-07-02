@@ -14,6 +14,7 @@ services:
       - '3000:3000'
     volumes:
       - .:/chotuve
+      - /chotuve/node_modules
     links:
       - postgres_db
 

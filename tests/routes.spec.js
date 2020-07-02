@@ -9,7 +9,6 @@ const app = require('../app')
 const supertest = require('supertest')
 const request = supertest(app)
 const knex = require('../db/knex')
-const constants = require('../src/constants/constants')
 const httpStatus = require('http-status-codes')
 
 beforeEach(() =>
@@ -20,8 +19,8 @@ beforeEach(() =>
     .then(() => knex.seed.run())
 )
 
-it('should returns database online', () => {
-  request.get(constants.PREFIX_URL + '/status').then(res => {
+it('should returns database online', done => {
+  request.get('/status').then(res => {
     expect(res.statusCode).toEqual(httpStatus.OK)
     expect(res.body).toMatchObject({
       code: 0,
@@ -31,11 +30,12 @@ it('should returns database online', () => {
         database_status: 'online'
       }
     })
+    done()
   })
 })
 
-it('should returns database offline', () => {
-  request.get(constants.PREFIX_URL + '/status').then(res => {
+it('should returns database offline', done => {
+  request.get('/status').then(res => {
     expect(res.statusCode).toEqual(httpStatus.OK)
     expect(res.body).toMatchObject({
       code: 0,
@@ -45,20 +45,23 @@ it('should returns database offline', () => {
         database_status: 'offline'
       }
     })
+    done()
   })
 })
 
-it('should gets the root endpoint successfully', () => {
-  request.get(constants.PREFIX_URL + '/').then(res => {
+it('should gets the root endpoint successfully', done => {
+  request.get('/').then(res => {
     expect(res.status).toBe(httpStatus.OK)
-    expect(res.text).toBe('Hello World!')
+    expect(res.text).toBe('Welcome to Choutuve Media Server API (V1)!')
+    done()
   })
 })
 
-it('should gets the ping endpoint successfully', () => {
-  request.get(constants.PREFIX_URL + '/ping').then(res => {
+it('should gets the ping endpoint successfully', done => {
+  request.get('/ping').then(res => {
     expect(res.status).toBe(httpStatus.OK)
     expect(res.text).toBe('Ping received!')
+    done()
   })
 })
 

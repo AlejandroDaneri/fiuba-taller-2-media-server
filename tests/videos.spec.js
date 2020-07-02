@@ -1,6 +1,14 @@
 import 'jest'
-// TODO: revisar que no se llama al mock de firebase aunque lo importe
+
 process.env.NODE_ENV = 'test'
+
+const Firebase = require('../src/services/firebase')
+jest.spyOn(Firebase.prototype, 'getVideoLinks').mockImplementation(() => {
+  return ['https://mock.com', 'https://mock.com']
+})
+jest.spyOn(Firebase.prototype, 'deleteVideo').mockImplementation(() => {
+  return 'mock'
+})
 
 const app = require('../app')
 const supertest = require('supertest')
@@ -9,6 +17,12 @@ const knex = require('../db/knex')
 const constants = require('../src/constants/constants')
 const httpStatus = require('http-status-codes')
 const errors = require('../src/errors/errors')
+
+const VIDEOS_URL = constants.PREFIX_URL + '/videos/'
+const header = {
+  'X-Client-ID': process.env.API_KEY,
+  'Content-Type': 'application/json'
+}
 
 beforeEach(() =>
   knex.migrate
@@ -28,15 +42,41 @@ it('should create a new video when payload is fine', done => {
     user_id: '32a1sd5asd654'
   }
   request
-    .post(constants.PREFIX_URL + '/videos')
+    .post(VIDEOS_URL)
+    .set(header)
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.CREATED)
       var resp = res.body
       expect(resp).toMatchObject(obj)
+      expect(resp.url).toMatch(/(https:)/i)
       done()
     })
 })
+
+it('should create a new video when payload is fine but with more fields', done => {
+  const obj = {
+    video_id: '1234',
+    name: 'salchicha',
+    date_created: '2020-05-09T19:00:31.362Z',
+    type: 'video/mp4',
+    size: 3420480,
+    user_id: '32a1sd5asd654'
+  }
+  obj.unknown = 'trash'
+  request
+    .post(VIDEOS_URL)
+    .set(header)
+    .send(obj)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.CREATED)
+      var resp = res.body
+      expect(resp).toMatchObject(obj)
+      expect(resp.url).toMatch(/(https:)/i)
+      done()
+    })
+})
+
 it('should not create a new video when payload is wrong', done => {
   const obj = {
     name: 'salchicha',
@@ -45,7 +85,8 @@ it('should not create a new video when payload is wrong', done => {
     size: 3420480
   }
   request
-    .post(constants.PREFIX_URL + '/videos')
+    .post(VIDEOS_URL)
+    .set(header)
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.BAD_REQUEST)
@@ -66,7 +107,8 @@ it('should not create a new video when video_id is duplicated', done => {
     user_id: '32a1sd5asd654'
   }
   request
-    .post(constants.PREFIX_URL + '/videos')
+    .post(VIDEOS_URL)
+    .set(header)
     .send(obj)
     .then(res => {
       expect(res.statusCode).toEqual(httpStatus.CONFLICT)
@@ -77,10 +119,9 @@ it('should not create a new video when video_id is duplicated', done => {
     })
 })
 
-it('should get all videos when gets /videos', () => {
+it('should get all videos when gets /videos', done => {
   const expected = [
     {
-      id: 1,
       video_id: '120',
       name: 'salchicha',
       date_created: '2020-05-09T19:00:31.362Z',
@@ -91,7 +132,6 @@ it('should get all videos when gets /videos', () => {
       user_id: '32a1sd5asd654'
     },
     {
-      id: 2,
       video_id: '112',
       name: 'doberman',
       date_created: '2020-05-09T19:00:31.362Z',
@@ -102,7 +142,6 @@ it('should get all videos when gets /videos', () => {
       user_id: '32a1sd5asd654'
     },
     {
-      id: 3,
       video_id: '125',
       name: 'ovejero',
       date_created: '2020-05-09T19:00:31.362Z',
@@ -113,10 +152,14 @@ it('should get all videos when gets /videos', () => {
       user_id: '32a1sd5asd654'
     }
   ]
-  request.get(constants.PREFIX_URL + '/videos').then(res => {
-    expect(res.statusCode).toEqual(httpStatus.OK)
-    expect(res.body).toStrictEqual({ videos: expected })
-  })
+  request
+    .get(VIDEOS_URL)
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.OK)
+      expect(res.body).toStrictEqual({ videos: expected })
+      done()
+    })
 })
 
 it('should get specific video when gets /videos/id', done => {
@@ -130,21 +173,45 @@ it('should get specific video when gets /videos/id', done => {
     thumb: 'http://algo.com',
     user_id: '32a1sd5asd654'
   }
-  request.get(constants.PREFIX_URL + '/videos/120').then(res => {
-    expect(res.statusCode).toEqual(httpStatus.OK)
-    expect(res.body).toMatchObject(expected)
-    done()
-  })
+  request
+    .get(VIDEOS_URL + '120')
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.OK)
+      expect(res.body).toMatchObject(expected)
+      done()
+    })
+})
+
+it('should get specific video when gets /videos/id', done => {
+  request
+    .delete(VIDEOS_URL + '120')
+    .set(header)
+    .then(() => {
+      request
+        .get(VIDEOS_URL + '120')
+        .set(header)
+        .then(res => {
+          expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
+          expect(res.body).toMatchObject(
+            errors.response(-1, 'Video 120 not found')
+          )
+          done()
+        })
+    })
 })
 
 it('should return not found when gets /videos/id when video not exists', done => {
-  request.get(constants.PREFIX_URL + '/videos/12320').then(res => {
-    expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
-    expect(res.body).toMatchObject(
-      errors.response(-1, 'Video ' + 12320 + ' not found')
-    )
-    done()
-  })
+  request
+    .get(VIDEOS_URL + '/12320')
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
+      expect(res.body).toMatchObject(
+        errors.response(-1, 'Video ' + 12320 + ' not found')
+      )
+      done()
+    })
 })
 
 it('should get specific video when gets /videos?id', done => {
@@ -160,15 +227,17 @@ it('should get specific video when gets /videos?id', done => {
       user_id: '32a1sd5asd654'
     }
   ]
-  request.get(constants.PREFIX_URL + '/videos?id=120').then(res => {
-    expect(res.statusCode).toEqual(httpStatus.OK)
-    expect(res.body).toMatchObject({ videos: expected })
-    done()
-  })
+  request
+    .get(constants.PREFIX_URL + '/videos?id=120')
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.OK)
+      expect(res.body).toMatchObject({ videos: expected })
+      done()
+    })
 })
 
 it('should delete video when ID exists', done => {
-  // TODO: revisar done
   const obj = {
     video_id: '5000',
     name: 'salchicha',
@@ -178,26 +247,36 @@ it('should delete video when ID exists', done => {
     user_id: '32a1sd5asd654'
   }
   request
-    .post(constants.PREFIX_URL + '/videos')
+    .post(VIDEOS_URL)
+    .set(header)
     .send(obj)
     .then(() => {
-      request.delete(constants.PREFIX_URL + '/videos/5000').then(res => {
-        expect(res.statusCode).toEqual(httpStatus.OK)
-        expect(res.body).toStrictEqual('Successfully deleted video 5000')
-        done()
-      })
+      request
+        .delete(VIDEOS_URL + '5000')
+        .set(header)
+        .then(res => {
+          expect(res.statusCode).toEqual(httpStatus.OK)
+          expect(res.body).toMatchObject({
+            code: 0,
+            message: 'Successfully deleted video 5000',
+            data: null
+          })
+          done()
+        })
     })
 })
 
 it('should not delete any video when ID not exists', done => {
-  // TODO: revisar done
-  request.delete(constants.PREFIX_URL + '/videos/32154').then(res => {
-    expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
-    expect(res.body).toMatchObject(
-      errors.response(-1, 'Video ' + 32154 + ' not found')
-    )
-    done()
-  })
+  request
+    .delete(VIDEOS_URL + '32154')
+    .set(header)
+    .then(res => {
+      expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
+      expect(res.body).toMatchObject(
+        errors.response(-1, 'Video ' + 32154 + ' not found')
+      )
+      done()
+    })
 })
 
 afterAll(async function (done) {

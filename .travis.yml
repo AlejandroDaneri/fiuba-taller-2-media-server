@@ -7,6 +7,8 @@ services:
   - docker
 
 before_install:
+  # install coveralls to push coverage to webpage
+  - npm install coveralls --no-save
   # install heroku CLI
   - wget -qO- https://toolbelt.heroku.com/install.sh | sh
   # login to docker registries (dockerhub + heroku)
@@ -14,15 +16,14 @@ before_install:
   - echo "$HEROKU_PASSWORD" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
 
 install:
-  - npm install
   # build dockerized environment to run tests
   - docker-compose -f docker-compose.travis.yml build
-
-script: docker-compose -f docker-compose.travis.yml up --abort-on-container-exit --exit-code-from app
 
 after_success:
   # submit results to coveralls, on success
   - coveralls < coverage/lcov.info
+
+script: docker-compose -f docker-compose.travis.yml up --abort-on-container-exit --exit-code-from app
 
 deploy:
   - provider: script
