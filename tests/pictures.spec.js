@@ -102,7 +102,7 @@ it('should get specific avatar when gets /pictures/user_id', done => {
     })
 })
 
-it('should return not found when gets /pcitures/id when user not exists', done => {
+it('should return not found when gets /pictures/id when user not exists', done => {
   request
     .get(PICTURES_URL + 'notFound')
     .set(header)
@@ -112,6 +112,24 @@ it('should return not found when gets /pcitures/id when user not exists', done =
         errors.response(-1, 'Picture of notFound not found')
       )
       done()
+    })
+})
+
+it('should return not found when gets /pictures/id on deleted picture', done => {
+  request
+    .delete(PICTURES_URL + `32a1sd5asd654`)
+    .set(header)
+    .then(() => {
+      request
+        .get(PICTURES_URL + '32a1sd5asd654')
+        .set(header)
+        .then(res => {
+          expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
+          expect(res.body).toMatchObject(
+            errors.response(-1, 'Picture of 32a1sd5asd654 not found')
+          )
+          done()
+        })
     })
 })
 

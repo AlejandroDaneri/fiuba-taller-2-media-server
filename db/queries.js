@@ -69,7 +69,7 @@ async function deletePicture (id) {
     .select('name')
     .where('user_id', id)
     .first()
-  await Videos()
+  await Pictures()
     .where('user_id', id)
     .del()
   return deleted

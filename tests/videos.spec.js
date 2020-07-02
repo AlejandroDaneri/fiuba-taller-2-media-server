@@ -183,6 +183,24 @@ it('should get specific video when gets /videos/id', done => {
     })
 })
 
+it('should get specific video when gets /videos/id', done => {
+  request
+    .delete(VIDEOS_URL + '120')
+    .set(header)
+    .then(() => {
+      request
+        .get(VIDEOS_URL + '120')
+        .set(header)
+        .then(res => {
+          expect(res.statusCode).toEqual(httpStatus.NOT_FOUND)
+          expect(res.body).toMatchObject(
+            errors.response(-1, 'Video 120 not found')
+          )
+          done()
+        })
+    })
+})
+
 it('should return not found when gets /videos/id when video not exists', done => {
   request
     .get(VIDEOS_URL + '/12320')
