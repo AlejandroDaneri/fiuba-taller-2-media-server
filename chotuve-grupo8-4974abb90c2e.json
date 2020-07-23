@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "chotuve-grupo8",
+  "private_key_id": "4974abb90c2e54ddfcde5f5029233c2ba5410c21",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDZ6TDn0IiJlE72\now1KKzUe+NkkU2aDWBR0LbPk2SqWCgIUmThUw+g06LKiitonCC0h9s0cIIDMo2h5\nSNQEZ1gCjkJKUvKx8UXgELIGiSaHg0dOksBshAihZzIm3ggZUmd23AXWo+EmehME\nBHiEy7Qqow62mlUfx7z7EKnee+sXMr/dN2juEvWmqXNpF+8jf0MWC3LKQCOIj76R\ncb9AAMGE3YqqPVrAFO0tKahA85oqOyrQp+qYLIdARijzwSyk4cgYlqc1ZexI+GRF\nUvJCosX1TTUn3qqIC0xsxeLQlbRQVidxRrbgswSMNrBzUH0kBq/EYj0o+SFPuU4Z\n/ShFEn9DAgMBAAECggEAMfF4xICucn3b1TpMpvWdMLKPLfyxb6QF2BTLeMVvNcEo\ndekiGIdoFoxIuOlDE5QTqAelPe+TJZPEM5wF/9ZhvQA24Er/ldn7Dl41NztC6eck\nNjV7RcPDKJ76xx63U3pn/T1zVxzrUwLCjfaqWqFHc0g47JAVt3lzbkWE8VmMaZ3L\nO/CHSFH3BbQTmSzvou52WOUELweE/USrPH3HL0RLJXtGVgGL15/vWdQrqmNRx0rb\n7TUoTI5bYYbGmI/4ebx6kZ5XuQb+huDDcE1fX/1qsj31xLKXl4t9lb5dYCtLNFhu\n9RI1ORffEe8cj5dd7HPncFVbrSZ1zaMGKkIESbdt4QKBgQDzYIqy9lVg1kv82r6U\n7CikMW+qez8MzL781qPPKBjLP+/U60f4qrDNLBqkxBR11rHdQzG/JTR/IIOkyHyM\nXW7FiLvxDO8U1g5i7nSSEJLvAVDGb42Bw2zWw3+vM9N8UdDcwFrSjAUDpmd2FYhg\nSM+nN8JBfV1zkb57r4W/r0564QKBgQDlNoUHsXvJvT/PntRS1IK7kieugRDRy/ym\n4jeNesrJA7AXvZR8UaSrLzHXg879jysz5rMDs0eF6iffA1E4coTFxD0Y3fJntvac\np4vzc+Dfm7/2Ye9gYNQggi+khixd9LoWQ/6TMM9wmEJQPx80QFyf2QrYScSvkpcc\n8RbFljSCowKBgQC/DnLTuv2bX5+XiEFEt3/QJd77fnUonzLvWbCO13NfW3nzNCDz\n3UueRZlE74kAWOKYSD+tRo/HnMa7fYgIyPBEseqYeQbW3JO+pmNspwYyCl5W6Qu1\naqzui9qYt562YaQNKBQkZTcqfl+KG61LqN0a8HLW5ouORkO65TeiGwUJAQKBgF6l\n8qzIlyso4I6lMVu6sPkvUv92ADIBn6RxySq8x7vVsAM9n3DubabaaCRsIy8EzXwz\nCTy/7QrZM/mc7w72Cul3LRt1msFFBfSOIvY2pWbwc4YTzrrngPCjkXTIis2JXsYO\n8bJp916xIMDuL75tzVGcWCQT4gn16DxlOVgBvFEtAoGBAJ8aL1XEuqchTm347Ssz\nR3weWTyqJ/+BTDMMRHCJH72wfeJX0zeIPm3mW5FJrNS4YHzD9fycwUKD8Xd/yDgz\ngBDRADE/hCzjDZ4naDAzM0AopncwwS4G9i4dyVXT6ERHhOXCx8e0+8vDvN6tV7fF\nqxHLCSXO7NyvmUcZ/kTO91/U\n-----END PRIVATE KEY-----\n",
+  "client_email": "media-storage@chotuve-grupo8.iam.gserviceaccount.com",
+  "client_id": "113699136411493577284",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/media-storage%40chotuve-grupo8.iam.gserviceaccount.com"
+}
